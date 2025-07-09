@@ -1,0 +1,56 @@
+# based on industry-standard Unity .gitignore from GitHub
+# https://github.com/github/gitignore/blob/main/Unity.gitignore
+
+# generated folders
+# local user settings, cached data, compiled code
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+
+# memory captures
+/[Mm]emoryCaptures/
+
+# asset meta-data
+/[Aa]ssets/AssetStoreTools*
+
+# project files
+.vs/
+.vscode/
+*.csproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# build files
+*.apk
+*.aab
+*.unitypackage
+*.app
+
+# build folders
+/iOSBuild/
+
+# crash reports
+sysinfo.txt
+crash.dmp
+error.log
+output_log.txt
+
+# gradle cache files (android)
+.gradle/
+build/
+
+# rider IDE specific files
+.idea/
