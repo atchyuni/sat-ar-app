@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(RectTransform))]
-public class SafeAreaFitter : MonoBehaviour
+public class SafeArea : MonoBehaviour
 {
     private RectTransform panel;
     private Rect lastSafeArea = new Rect(0, 0, 0, 0);
@@ -27,7 +27,7 @@ public class SafeAreaFitter : MonoBehaviour
     {
         lastSafeArea = Screen.safeArea;
 
-        // convert safe area rectangle from screen to normalised viewport space
+        // convert safe area rectangle to normalised viewport space
         Vector2 anchorMin = lastSafeArea.position;
         Vector2 anchorMax = lastSafeArea.position + lastSafeArea.size;
 
@@ -36,10 +36,9 @@ public class SafeAreaFitter : MonoBehaviour
         anchorMax.x /= Screen.width;
         anchorMax.y /= Screen.height;
 
-        // apply normalised anchors
         panel.anchorMin = anchorMin;
         panel.anchorMax = anchorMax;
 
-        Debug.Log($"Safe Area Applied: Min({anchorMin.x}, {anchorMin.y}) Max({anchorMax.x}, {anchorMax.y})");
+        Debug.Log($"safe area: min({anchorMin.x}, {anchorMin.y}) max({anchorMax.x}, {anchorMax.y})");
     }
 }

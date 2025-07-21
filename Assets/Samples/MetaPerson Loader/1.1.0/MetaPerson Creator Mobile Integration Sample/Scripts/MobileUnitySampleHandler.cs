@@ -14,6 +14,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace AvatarSDK.MetaPerson.MobileIntegrationSample
 {
@@ -132,6 +133,9 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
 				{
 					progressText.text = string.Empty;
 					importControls.SetActive(false);
+
+					AvatarManager.Instance.SetCurrentAvatar(message.Args["url"]); // (1) save URL
+					SceneManager.LoadScene("avatar_display"); // (2) load next scene
 				}
 				else
 				{
