@@ -13,18 +13,18 @@ public class AvatarDisplay : MonoBehaviour
             return;
         }
 
-        // retrieve URL from persistent AvatarManager
+        // RETRIEVE url from persistent avatar manager
         string avatarUrl = AvatarManager.Instance.CurrentAvatarUrl;
 
-        // check if URL valid, then load model
+        // check if valid, then load model
         if (!string.IsNullOrEmpty(avatarUrl))
         {
-            Debug.Log("found avatar URL, loading model: " + avatarUrl);
+            Debug.Log("loading model from url: " + avatarUrl);
             metaPersonLoader.LoadModel(avatarUrl);
         }
         else
         {
-            Debug.LogWarning("no avatar URL found");
+            Debug.LogWarning("no avatar url found");
         }
     }
 }

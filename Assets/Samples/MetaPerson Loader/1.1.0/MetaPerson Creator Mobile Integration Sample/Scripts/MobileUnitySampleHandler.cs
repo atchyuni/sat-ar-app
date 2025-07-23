@@ -21,7 +21,7 @@ using UnityEngine.Networking;
 
 namespace AvatarSDK.MetaPerson.MobileIntegrationSample
 {
-    // helper classes for JSON serialization
+    // helper classes for json serialization
     [System.Serializable]
     public class AvatarProcessRequest
     {
@@ -40,11 +40,15 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
 
 		public MetaPersonLoader metaPersonLoader;
 
+		public GameObject instructionPopup;
+
 		public GameObject uniWebViewGameObject;
 
 		public GameObject importControls;
 
 		public Button getAvatarButton;
+
+		public Button proceedButton;
 
 		public Text progressText;
 
@@ -52,13 +56,35 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
 		{
 			if (credentials.IsEmpty())
 			{
-				progressText.text = "Account credentials not provided";
+				progressText.text = "ERROR: account credentials not provided";
 				getAvatarButton.interactable = false;
+			}
+
+			if (instructionPopup != null)
+			{
+				instructionPopup.SetActive(false);
 			}
 		}
 
 		public void OnGetAvatarButtonClick()
 		{
+			if (instructionPopup != null)
+			{
+				instructionPopup.SetActive(true);
+			}
+			else
+			{
+				Debug.LogError("instruction popup not assigned");
+			}
+		}
+
+		public void OnProceedButtonClick()
+		{
+			if (instructionPopup != null)
+			{
+				instructionPopup.SetActive(false);
+			}
+
 			UniWebView uniWebView = uniWebViewGameObject.GetComponent<UniWebView>();
 			if (uniWebView == null)
 			{
@@ -144,7 +170,7 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
 
 				webView.Hide();
 				getAvatarButton.interactable = false;
-				progressText.text = "Modifying Avatar using Blender...";
+				progressText.text = "STATUS: modifying avatar using blender...";
 
 				// start new server-side processing
 				_ = ProcessAvatarOnServer(originalUrl);
@@ -174,7 +200,7 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
 				catch (Exception e)
 				{
 					Debug.LogError("server error: " + e.Message);
-					progressText.text = "Failed to modify Avatar";
+					progressText.text = "STATUS: failed to modify avatar";
 					getAvatarButton.interactable = true;
 					return; // exit method on failure
 				}
@@ -185,9 +211,9 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
 				string modifiedUrl = responseData.newUrl;
 
 				Debug.Log("modified avatar URL: " + modifiedUrl);
-				progressText.text = "Loading modified Avatar...";
+				progressText.text = "STATUS: loading modified avatar...";
 
-				bool isLoaded = await metaPersonLoader.LoadModelAsync(modifiedUrl, p => progressText.text = string.Format("Downloading: {0}%", (int)(p * 100)));
+				bool isLoaded = await metaPersonLoader.LoadModelAsync(modifiedUrl, p => progressText.text = string.Format("DOWNLOADING: {0}%", (int)(p * 100)));
 				
 				if (isLoaded)
 				{
@@ -199,7 +225,7 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
 				}
 				else
 				{
-					progressText.text = "Failed to load modified Avatar";
+					progressText.text = "ERROR: failed to load modified avatar";
 					getAvatarButton.interactable = true;
 				}
 			}

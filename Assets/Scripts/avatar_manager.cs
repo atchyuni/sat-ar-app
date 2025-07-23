@@ -1,3 +1,4 @@
+// adapted from sat-master
 using UnityEngine;
 
 public class AvatarManager : MonoBehaviour
@@ -9,11 +10,11 @@ public class AvatarManager : MonoBehaviour
 
     private void Awake()
     {
-        // Ensure only one instance of AvatarManager exists
+        // ensure only one instance
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Optional, if you want it to persist across scenes
+            DontDestroyOnLoad(gameObject); // for persisting across scenes
             Debug.Log("[AvatarManager] Instance is set.");
         }
         else
@@ -25,10 +26,9 @@ public class AvatarManager : MonoBehaviour
 
     public void SetCurrentAvatar(string avatarUrl)
     {
-        // Debug log to confirm method is being called
         Debug.Log("SetCurrentAvatar called with avatar URL: " + avatarUrl);
 
-        // Check for null values
+        // check for null values
         if (string.IsNullOrEmpty(avatarUrl))
         {
             Debug.LogError("SetCurrentAvatar received null avatar or empty URL.");
