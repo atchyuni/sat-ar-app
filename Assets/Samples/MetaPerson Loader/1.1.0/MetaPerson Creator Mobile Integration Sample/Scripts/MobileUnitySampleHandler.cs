@@ -12,12 +12,28 @@ using AvatarSDK.MetaPerson.Loader;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.Networking;
 
 namespace AvatarSDK.MetaPerson.MobileIntegrationSample
 {
+    // helper classes for JSON serialization
+    [System.Serializable]
+    public class AvatarProcessRequest
+    {
+        public string url;
+    }
+
+    [System.Serializable]
+    public class AvatarProcessResponse
+    {
+        public string newUrl;
+    }
+
 	public class MobileUnitySampleHandler : MonoBehaviour
 	{
 		public AccountCredentials credentials;
@@ -36,7 +52,7 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
 		{
 			if (credentials.IsEmpty())
 			{
-				progressText.text = "Account credentials are not provided!";
+				progressText.text = "Account credentials not provided";
 				getAvatarButton.interactable = false;
 			}
 		}
@@ -119,29 +135,72 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
 			webView.AddJavaScript(javaScriptCode, payload => Debug.LogWarningFormat("JS exection result: {0}", payload.resultCode));
 		}
 
-		private async void OnMessageReceived(UniWebView webView, UniWebViewMessage message)
+		private void OnMessageReceived(UniWebView webView, UniWebViewMessage message)
 		{
 			if (message.Path == "model_exported")
 			{
-				Debug.LogWarningFormat("Start avatar loading from url: {0}", message.Args["url"]);
+				string originalUrl = message.Args["url"];
+				Debug.Log("original avatar URL: " + originalUrl);
 
 				webView.Hide();
 				getAvatarButton.interactable = false;
+				progressText.text = "Modifying Avatar using Blender...";
 
-				bool isLoaded = await metaPersonLoader.LoadModelAsync(message.Args["url"], p => progressText.text = string.Format("Downloading avatar: {0}%", (int)(p * 100)));
+				// start new server-side processing
+				_ = ProcessAvatarOnServer(originalUrl);
+			}
+		}
+
+		private async Task ProcessAvatarOnServer(string originalUrl)
+		{
+			// --- 1. prepare request for server ---
+			string serverApiUrl = "http://10.74.130.118:5000/process-avatar";
+			
+			var requestData = new AvatarProcessRequest { url = originalUrl };
+			string jsonBody = JsonUtility.ToJson(requestData);
+			byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonBody);
+
+			using (UnityWebRequest www = new UnityWebRequest(serverApiUrl, "POST"))
+			{
+				www.uploadHandler = new UploadHandlerRaw(bodyRaw);
+				www.downloadHandler = new DownloadHandlerBuffer();
+				www.SetRequestHeader("Content-Type", "application/json");
+
+				// --- 2. send request ---
+				try
+				{
+					await www.SendWebRequest();
+				}
+				catch (Exception e)
+				{
+					Debug.LogError("server error: " + e.Message);
+					progressText.text = "Failed to modify Avatar";
+					getAvatarButton.interactable = true;
+					return; // exit method on failure
+				}
+			
+				// --- 3. load modified model from new url ---
+				string responseJson = www.downloadHandler.text;
+				var responseData = JsonUtility.FromJson<AvatarProcessResponse>(responseJson);
+				string modifiedUrl = responseData.newUrl;
+
+				Debug.Log("modified avatar URL: " + modifiedUrl);
+				progressText.text = "Loading modified Avatar...";
+
+				bool isLoaded = await metaPersonLoader.LoadModelAsync(modifiedUrl, p => progressText.text = string.Format("Downloading: {0}%", (int)(p * 100)));
+				
 				if (isLoaded)
 				{
 					progressText.text = string.Empty;
 					importControls.SetActive(false);
-
-					AvatarManager.Instance.SetCurrentAvatar(message.Args["url"]); // (1) save URL
-					SceneManager.LoadScene("avatar_display"); // (2) load next scene
+					// save and proceed to next scene
+					AvatarManager.Instance.SetCurrentAvatar(modifiedUrl);
+					SceneManager.LoadScene("avatar_display");
 				}
 				else
 				{
+					progressText.text = "Failed to load modified Avatar";
 					getAvatarButton.interactable = true;
-					progressText.text = "Unable to load the model";
-					importControls.SetActive(true);
 				}
 			}
 		}

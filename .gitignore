@@ -54,3 +54,21 @@ build/
 
 # rider IDE specific files
 .idea/
+
+# python-based proj
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+dist/
+build/
+
+venv/
+.env/
+env/
+.venv/
+
+.vscode/
+
+.DS_Store
+Thumbs.db
