@@ -34,201 +34,205 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
         public string newUrl;
     }
 
-	public class MobileUnitySampleHandler : MonoBehaviour
-	{
-		public AccountCredentials credentials;
+    public class MobileUnitySampleHandler : MonoBehaviour
+    {
+        public AccountCredentials credentials;
 
-		public MetaPersonLoader metaPersonLoader;
+        public MetaPersonLoader metaPersonLoader;
 
-		public GameObject instructionPopup;
+        public GameObject popupBox; 
 
-		public GameObject uniWebViewGameObject;
+        public GameObject uniWebViewGameObject;
 
-		public GameObject importControls;
+        public GameObject importControls;
 
-		public Button getAvatarButton;
+        public Button getAvatarButton;
 
-		public Button proceedButton;
+        public Button proceedButton;
 
-		public Text progressText;
+        public Text progressText;
 
-		private void Start()
-		{
-			if (credentials.IsEmpty())
-			{
-				progressText.text = "ERROR: account credentials not provided";
-				getAvatarButton.interactable = false;
-			}
+        public GameObject overlayBackground;
 
-			if (instructionPopup != null)
-			{
-				instructionPopup.SetActive(false);
-			}
-		}
+        private void Start()
+        {
+            if (credentials.IsEmpty())
+            {
+                progressText.text = "ERROR: account credentials not provided";
+                getAvatarButton.interactable = false;
+            }
 
-		public void OnGetAvatarButtonClick()
-		{
-			if (instructionPopup != null)
-			{
-				instructionPopup.SetActive(true);
-			}
-			else
-			{
-				Debug.LogError("instruction popup not assigned");
-			}
-		}
+            if (popupBox != null)
+            {
+                popupBox.SetActive(false);
+            }
+            if (overlayBackground != null)
+            {
+                overlayBackground.SetActive(false);
+            }
+        }
 
-		public void OnProceedButtonClick()
-		{
-			if (instructionPopup != null)
-			{
-				instructionPopup.SetActive(false);
-			}
+        public void OnGetAvatarButtonClick()
+        {
+            if (popupBox != null && overlayBackground != null)
+            {
+                overlayBackground.SetActive(true);
+                popupBox.SetActive(true);
+            }
+        }
 
-			UniWebView uniWebView = uniWebViewGameObject.GetComponent<UniWebView>();
-			if (uniWebView == null)
-			{
-				uniWebView = uniWebViewGameObject.AddComponent<UniWebView>();
-				uniWebView.EmbeddedToolbar.Hide();
-				uniWebView.Frame = new Rect(0, 0, Screen.width, Screen.height);
-			}
+        public void OnProceedButtonClick()
+        {
+            if (popupBox != null && overlayBackground != null)
+            {
+                overlayBackground.SetActive(false);
+                popupBox.SetActive(false);
+            }
 
-			uniWebView.OnPageFinished += OnPageFinished;
-			uniWebView.OnMessageReceived += OnMessageReceived;
-			uniWebView.Load("https://mobile.metaperson.avatarsdk.com/generator");
-			uniWebView.Show();
-		}
+            UniWebView uniWebView = uniWebViewGameObject.GetComponent<UniWebView>();
+            if (uniWebView == null)
+            {
+                uniWebView = uniWebViewGameObject.AddComponent<UniWebView>();
+                uniWebView.EmbeddedToolbar.Hide();
+                uniWebView.Frame = new Rect(0, 0, Screen.width, Screen.height);
+            }
 
-		private void OnPageFinished(UniWebView webView, int statusCode, string url)
-		{
-			string javaScriptCode = @"
-					{
-						function sendConfigurationParams() {
-							console.log('sendConfigurationParams - called');
+            uniWebView.OnPageFinished += OnPageFinished;
+            uniWebView.OnMessageReceived += OnMessageReceived;
+            uniWebView.Load("https://mobile.metaperson.avatarsdk.com/generator");
+            uniWebView.Show();
+        }
 
-							const CLIENT_ID = '" + credentials.clientId + @"';
-							const CLIENT_SECRET = '" + credentials.clientSecret + @"';
+        private void OnPageFinished(UniWebView webView, int statusCode, string url)
+        {
+            string javaScriptCode = @"
+                    {
+                        function sendConfigurationParams() {
+                            console.log('sendConfigurationParams - called');
 
-							let authenticationMessage = {
-								'eventName': 'authenticate',
-								'clientId': CLIENT_ID,
-								'clientSecret': CLIENT_SECRET
-							};
-							window.postMessage(authenticationMessage, '*');
+                            const CLIENT_ID = '" + credentials.clientId + @"';
+                            const CLIENT_SECRET = '" + credentials.clientSecret + @"';
 
-							let exportParametersMessage = {
-								'eventName': 'set_export_parameters',
-								'format': 'glb',
-								'lod': 2,
-								'textureProfile': '1K.jpg'
-							};
-							window.postMessage(exportParametersMessage, '*');
+                            let authenticationMessage = {
+                                'eventName': 'authenticate',
+                                'clientId': CLIENT_ID,
+                                'clientSecret': CLIENT_SECRET
+                            };
+                            window.postMessage(authenticationMessage, '*');
 
-							let uiParametersMessage = {
-								'eventName': 'set_ui_parameters',
-								'isExportButtonVisible' : true,
-								'isLoginButtonVisible': true
-							};
-							window.postMessage(uiParametersMessage, '*');
-						}
+                            let exportParametersMessage = {
+                                'eventName': 'set_export_parameters',
+                                'format': 'glb',
+                                'lod': 2,
+                                'textureProfile': '1K.jpg'
+                            };
+                            window.postMessage(exportParametersMessage, '*');
 
-						function onWindowMessage(evt) {
-							if (evt.type === 'message') {
-								if (evt.data?.source === 'metaperson_creator') {
-									let data = evt.data;
-									let evtName = data?.eventName;
-									if (evtName === 'unity_loaded' ||
-										evtName === 'mobile_loaded') {
-										console.log('got mobile_loaded event');
-										sendConfigurationParams();
-									} else if (evtName === 'model_exported') {
-										console.log('got model_exported event');
-										const params = new URLSearchParams();
-										params.append('url', data.url);
-										params.append('gender', data.gender);
-										params.append('avatarCode', data.avatarCode);
-										window.location.href = 'uniwebview://model_exported?' + params.toString();
-									}
-								}
-							}
-						}
-						window.addEventListener('message', onWindowMessage);
+                            let uiParametersMessage = {
+                                'eventName': 'set_ui_parameters',
+                                'isExportButtonVisible' : true,
+                                'isLoginButtonVisible': true
+                            };
+                            window.postMessage(uiParametersMessage, '*');
+                        }
 
-						sendConfigurationParams();
-					}
-				";
+                        function onWindowMessage(evt) {
+                            if (evt.type === 'message') {
+                                if (evt.data?.source === 'metaperson_creator') {
+                                    let data = evt.data;
+                                    let evtName = data?.eventName;
+                                    if (evtName === 'unity_loaded' ||
+                                        evtName === 'mobile_loaded') {
+                                        console.log('got mobile_loaded event');
+                                        sendConfigurationParams();
+                                    } else if (evtName === 'model_exported') {
+                                        console.log('got model_exported event');
+                                        const params = new URLSearchParams();
+                                        params.append('url', data.url);
+                                        params.append('gender', data.gender);
+                                        params.append('avatarCode', data.avatarCode);
+                                        window.location.href = 'uniwebview://model_exported?' + params.toString();
+                                    }
+                                }
+                            }
+                        }
+                        window.addEventListener('message', onWindowMessage);
 
-			webView.AddJavaScript(javaScriptCode, payload => Debug.LogWarningFormat("JS exection result: {0}", payload.resultCode));
-		}
+                        sendConfigurationParams();
+                    }
+                ";
 
-		private void OnMessageReceived(UniWebView webView, UniWebViewMessage message)
-		{
-			if (message.Path == "model_exported")
-			{
-				string originalUrl = message.Args["url"];
-				Debug.Log("original avatar URL: " + originalUrl);
+            webView.AddJavaScript(javaScriptCode, payload => Debug.LogWarningFormat("JS exection result: {0}", payload.resultCode));
+        }
 
-				webView.Hide();
-				getAvatarButton.interactable = false;
-				progressText.text = "STATUS: modifying avatar using blender...";
+        private void OnMessageReceived(UniWebView webView, UniWebViewMessage message)
+        {
+            if (message.Path == "model_exported")
+            {
+                string originalUrl = message.Args["url"];
+                Debug.Log("original avatar URL: " + originalUrl);
 
-				// start new server-side processing
-				_ = ProcessAvatarOnServer(originalUrl);
-			}
-		}
+                webView.Hide();
+                getAvatarButton.interactable = false;
+                progressText.text = "STATUS: modifying avatar using blender...";
 
-		private async Task ProcessAvatarOnServer(string originalUrl)
-		{
-			// --- 1. prepare request for server ---
-			string serverApiUrl = "http://10.74.130.118:5000/process-avatar";
-			
-			var requestData = new AvatarProcessRequest { url = originalUrl };
-			string jsonBody = JsonUtility.ToJson(requestData);
-			byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonBody);
+                // start new server-side processing
+                _ = ProcessAvatarOnServer(originalUrl);
+            }
+        }
 
-			using (UnityWebRequest www = new UnityWebRequest(serverApiUrl, "POST"))
-			{
-				www.uploadHandler = new UploadHandlerRaw(bodyRaw);
-				www.downloadHandler = new DownloadHandlerBuffer();
-				www.SetRequestHeader("Content-Type", "application/json");
+        private async Task ProcessAvatarOnServer(string originalUrl)
+        {
+            // --- 1. prepare request for server ---
+            string serverApiUrl = "http://10.74.130.118:5000/process-avatar";
+            
+            var requestData = new AvatarProcessRequest { url = originalUrl };
+            string jsonBody = JsonUtility.ToJson(requestData);
+            byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonBody);
 
-				// --- 2. send request ---
-				try
-				{
-					await www.SendWebRequest();
-				}
-				catch (Exception e)
-				{
-					Debug.LogError("server error: " + e.Message);
-					progressText.text = "STATUS: failed to modify avatar";
-					getAvatarButton.interactable = true;
-					return; // exit method on failure
-				}
-			
-				// --- 3. load modified model from new url ---
-				string responseJson = www.downloadHandler.text;
-				var responseData = JsonUtility.FromJson<AvatarProcessResponse>(responseJson);
-				string modifiedUrl = responseData.newUrl;
+            using (UnityWebRequest www = new UnityWebRequest(serverApiUrl, "POST"))
+            {
+                www.uploadHandler = new UploadHandlerRaw(bodyRaw);
+                www.downloadHandler = new DownloadHandlerBuffer();
+                www.SetRequestHeader("Content-Type", "application/json");
 
-				Debug.Log("modified avatar URL: " + modifiedUrl);
-				progressText.text = "STATUS: loading modified avatar...";
+                // --- 2. send request ---
+                try
+                {
+                    await www.SendWebRequest();
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError("server error: " + e.Message);
+                    progressText.text = "STATUS: failed to modify avatar";
+                    getAvatarButton.interactable = true;
+                    return; // exit method on failure
+                }
+            
+                // --- 3. load modified model from new url ---
+                string responseJson = www.downloadHandler.text;
+                var responseData = JsonUtility.FromJson<AvatarProcessResponse>(responseJson);
+                string modifiedUrl = responseData.newUrl;
 
-				bool isLoaded = await metaPersonLoader.LoadModelAsync(modifiedUrl, p => progressText.text = string.Format("DOWNLOADING: {0}%", (int)(p * 100)));
-				
-				if (isLoaded)
-				{
-					progressText.text = string.Empty;
-					importControls.SetActive(false);
-					// save and proceed to next scene
-					AvatarManager.Instance.SetCurrentAvatar(modifiedUrl);
-					SceneManager.LoadScene("avatar_display");
-				}
-				else
-				{
-					progressText.text = "ERROR: failed to load modified avatar";
-					getAvatarButton.interactable = true;
-				}
-			}
-		}
-	}
+                Debug.Log("modified avatar URL: " + modifiedUrl);
+                progressText.text = "STATUS: loading modified avatar...";
+
+                bool isLoaded = await metaPersonLoader.LoadModelAsync(modifiedUrl, p => progressText.text = string.Format("DOWNLOADING: {0}%", (int)(p * 100)));
+                
+                if (isLoaded)
+                {
+                    progressText.text = string.Empty;
+                    importControls.SetActive(false);
+                    // save and proceed to next scene
+                    AvatarManager.Instance.SetCurrentAvatar(modifiedUrl);
+                    SceneManager.LoadScene("avatar_display");
+                }
+                else
+                {
+                    progressText.text = "ERROR: failed to load modified avatar";
+                    getAvatarButton.interactable = true;
+                }
+            }
+        }
+    }
 }

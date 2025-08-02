@@ -9,12 +9,12 @@ def adjust_proportions(bone_name, scale_factor):
     """
     if bpy.context.object.mode != 'EDIT':
         bpy.ops.object.mode_set(mode='EDIT')
-        
-    bpy.ops.armature.select_all(action='DESELECT')
     
+    bpy.ops.armature.select_all(action='DESELECT')
+
     # find bone in armature's edit bones collection
     bone = bpy.context.object.data.edit_bones.get(bone_name)
-    
+
     if bone:
         bone.select = True
         bone.select_head = True
@@ -45,7 +45,7 @@ def run_pipeline(input_path, output_path):
         if obj.type == 'ARMATURE':
             armature = obj
             break
-    
+
     if not armature:
         print("error: no armature found in imported scene")
         return
