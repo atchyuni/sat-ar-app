@@ -6,6 +6,7 @@ public class AvatarDisplay : MonoBehaviour
 {
     public MetaPersonLoader metaPersonLoader;
     public OrbitControls cameraControls;
+    public Vector3 avatarWorldPosition = new Vector3(-0.6f, 0, 0);
 
     async void Start()
     {
@@ -30,7 +31,8 @@ public class AvatarDisplay : MonoBehaviour
                 // -- 1. FETCH newly loaded avatar, CREATE pivot --
                 GameObject avatarObject = metaPersonLoader.transform.GetChild(0).gameObject;
                 GameObject avatarPivot = new GameObject("AvatarPivot");
-                avatarPivot.transform.position = avatarObject.transform.position; // match initial position
+
+                avatarPivot.transform.position = avatarWorldPosition;
 
                 avatarObject.transform.SetParent(avatarPivot.transform); // set pivot
 
