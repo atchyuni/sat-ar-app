@@ -26,6 +26,8 @@ public class DisplayUI : MonoBehaviour
 
     public void OnShowSavePopup()
     {
+        nameInput.text = "";
+
         if (backgroundOverlay != null)
         {
             backgroundOverlay.SetActive(true);
@@ -44,14 +46,20 @@ public class DisplayUI : MonoBehaviour
             return;
         }
 
+        if (DBManager.Instance == null)
+        {
+            Debug.LogError("FATAL ERROR: db instance not found");
+            return;
+        }
+
         savePopup.SetActive(false);
         Debug.Log("saving to supabase...");
 
-        string shareCode = await SupabaseManager.Instance.SaveAvatar(avatarName, avatarUrl);
+        string shareCode = await DBManager.Instance.SaveAvatar(avatarName, avatarUrl);
 
         if (!string.IsNullOrEmpty(shareCode))
         {
-            string confirmationMessage = $"Your unique code for <b>{avatarName}</b> avatar is: <b>{shareCode}</b>.\n\nPlease save it in a secure place so you can load your avatar in the future.";
+            string confirmationMessage = $"Your unique code for '<b>{avatarName}</b>' is: <b>{shareCode}</b>.\n\nPlease save it in a secure place so you can load your avatar in the future.";
             codeText.text = confirmationMessage;
             codeDisplay.SetActive(true);
         }

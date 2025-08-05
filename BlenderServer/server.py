@@ -13,17 +13,7 @@ os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
 @app.route('/process-avatar', methods=['POST'])
 def process_avatar():
-    # --- 1. CLEANUP ---
-    print("clearing output folder...")
-    for filename in os.listdir(OUTPUT_FOLDER):
-        file_path = os.path.join(OUTPUT_FOLDER, filename)
-        try:
-            if os.path.isfile(file_path) or os.path.islink(file_path):
-                os.unlink(file_path) # deletes files and symlinks
-        except Exception as e:
-            print(f'failed to delete {file_path} due to: {e}')
-    
-    # --- 2. FETCH original url ---
+    # --- 1. fetch original url ---
     data = request.json
     if not data or 'url' not in data:
         return jsonify({"error": "missing 'url' in request body"}), 400
@@ -38,7 +28,7 @@ def process_avatar():
     original_filepath = os.path.join(OUTPUT_FOLDER, original_filename)
     modified_filepath = os.path.join(OUTPUT_FOLDER, modified_filename)
     
-    # --- 3. RUN download/processing scripts ---
+    # --- 2. run download/processing scripts ---
     try:
         print(f"downloading {original_url}...")
         subprocess.run(
@@ -59,7 +49,7 @@ def process_avatar():
             check=True
         )
         
-        # --- 4. RETURN url to new file ---
+        # --- 4. return url to new file ---
         new_avatar_url = request.host_url.rstrip('/') + f"/files/{modified_filename}"
         
         # clean up original download

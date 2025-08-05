@@ -1,18 +1,16 @@
-// Filename: SupabaseManager.cs
-// Purpose: A project-wide singleton to handle all communication with Supabase.
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Text;
 using System.Collections;
 using System.Threading.Tasks;
 
-public class SupabaseManager : MonoBehaviour
+public class DBManager : MonoBehaviour
 {
-    public static SupabaseManager Instance { get; private set; }
+    public static DBManager Instance { get; private set; }
 
     // --- SUPABASE CREDENTIALS ---
-    private string supabaseUrl = "https://yrnfgbeqrnltwogussiz.supabase.co";
-    private string supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlybmZnYmVxcm5sdHdvZ3Vzc2l6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzMTgzMDgsImV4cCI6MjA2OTg5NDMwOH0.IbeCfEmTrLa4SmXapDWXP6ipxp_njQpIsJc2nXLv6-k";
+    private string dbUrl = "https://yrnfgbeqrnltwogussiz.supabase.co";
+    private string dbAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlybmZnYmVxcm5sdHdvZ3Vzc2l6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzMTgzMDgsImV4cCI6MjA2OTg5NDMwOH0.IbeCfEmTrLa4SmXapDWXP6ipxp_njQpIsJc2nXLv6-k";
 
     [System.Serializable]
     public class AvatarData
@@ -78,13 +76,13 @@ public class SupabaseManager : MonoBehaviour
         var data = new PostData { name = name, url = url, share_code = code };
         string json = JsonUtility.ToJson(data);
         byte[] jsonToSend = new UTF8Encoding().GetBytes(json);
-        string requestUrl = $"{supabaseUrl}/rest/v1/saved_avatars";
+        string requestUrl = $"{dbUrl}/rest/v1/avatars";
 
         using (UnityWebRequest request = new UnityWebRequest(requestUrl, "POST"))
         {
             request.uploadHandler = new UploadHandlerRaw(jsonToSend);
             request.downloadHandler = new DownloadHandlerBuffer();
-            request.SetRequestHeader("apikey", supabaseAnonKey);
+            request.SetRequestHeader("apikey", dbAnonKey);
             request.SetRequestHeader("Content-Type", "application/json");
 
             yield return request.SendWebRequest();
@@ -95,16 +93,16 @@ public class SupabaseManager : MonoBehaviour
     [System.Serializable] private class AvatarList { public AvatarData[] avatars; }
     private IEnumerator FetchAvatarData(string code, System.Action<AvatarData> callback)
     {
-        string requestUrl = $"{supabaseUrl}/rest/v1/saved_avatars?share_code=eq.{code}&select=*&limit=1";
+        string requestUrl = $"{dbUrl}/rest/v1/avatars?share_code=eq.{code}&select=*&limit=1";
         using (UnityWebRequest request = new UnityWebRequest(requestUrl, "GET"))
         {
             request.downloadHandler = new DownloadHandlerBuffer();
-            request.SetRequestHeader("apikey", supabaseAnonKey);
+            request.SetRequestHeader("apikey", dbAnonKey);
             yield return request.SendWebRequest();
 
             if (request.result == UnityWebRequest.Result.Success)
             {
-                string fixedJson = "{\"saved_avatars\":" + request.downloadHandler.text + "}";
+                string fixedJson = "{\"avatars\":" + request.downloadHandler.text + "}";
                 AvatarList result = JsonUtility.FromJson<AvatarList>(fixedJson);
                 callback(result.avatars != null && result.avatars.Length > 0 ? result.avatars[0] : null);
             }
