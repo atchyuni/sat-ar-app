@@ -6,10 +6,10 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/startup.unity
+    path: Assets/Scenes/Startup.unity
     guid: 7adfc21b9397147848e71fa3c1a978f9
   - enabled: 1
-    path: Assets/Scenes/avatar_display.unity
+    path: Assets/Scenes/AvatarDisplay.unity
     guid: 5887e4128c4684f24ae48984e4d50487
   m_configObjects:
     UnityEditor.XR.ARKit.ARKitSettings: {fileID: 11400000, guid: 33eb8ebe7ddde47f08eaeb0a368075af, type: 2}

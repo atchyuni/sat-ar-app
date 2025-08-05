@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 99093482}
   - component: {fileID: 99093484}
   m_Layer: 5
-  m_Name: proceed_button
+  m_Name: ProceedButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -418,7 +418,7 @@ GameObject:
   - component: {fileID: 296857473}
   - component: {fileID: 296857476}
   m_Layer: 5
-  m_Name: create_button
+  m_Name: CreateButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -748,7 +748,7 @@ GameObject:
   - component: {fileID: 572155972}
   - component: {fileID: 572155973}
   m_Layer: 5
-  m_Name: center_container
+  m_Name: CenterContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1044,7 +1044,7 @@ GameObject:
   - component: {fileID: 638720873}
   - component: {fileID: 638720872}
   m_Layer: 5
-  m_Name: background_overlay
+  m_Name: BackgroundOverlay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1253,7 +1253,7 @@ GameObject:
   - component: {fileID: 723419795}
   - component: {fileID: 723419794}
   m_Layer: 5
-  m_Name: subtitle
+  m_Name: Subtitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1593,7 +1593,7 @@ GameObject:
   - component: {fileID: 1053618869}
   - component: {fileID: 1053618868}
   m_Layer: 5
-  m_Name: title
+  m_Name: Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1727,7 +1727,7 @@ GameObject:
   - component: {fileID: 1123410965}
   - component: {fileID: 1123410967}
   m_Layer: 5
-  m_Name: safe_area_panel
+  m_Name: SafeAreaContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1786,7 +1786,7 @@ GameObject:
   - component: {fileID: 1274665904}
   - component: {fileID: 1274665903}
   m_Layer: 5
-  m_Name: header
+  m_Name: Header
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2011,7 +2011,7 @@ GameObject:
   - component: {fileID: 1468697876}
   - component: {fileID: 1468697877}
   m_Layer: 5
-  m_Name: spacer
+  m_Name: Spacer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2068,7 +2068,7 @@ GameObject:
   - component: {fileID: 1534707864}
   - component: {fileID: 1534707863}
   m_Layer: 5
-  m_Name: progress_text
+  m_Name: ProgressText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2147,7 +2147,7 @@ GameObject:
   - component: {fileID: 1588968033}
   - component: {fileID: 1588968034}
   m_Layer: 5
-  m_Name: button_container
+  m_Name: ButtonContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2226,7 +2226,7 @@ GameObject:
   - component: {fileID: 1710918289}
   - component: {fileID: 1710918288}
   m_Layer: 5
-  m_Name: instruction_text
+  m_Name: Description
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2434,7 +2434,7 @@ GameObject:
   - component: {fileID: 1914232653}
   - component: {fileID: 1914232652}
   m_Layer: 5
-  m_Name: popup_box
+  m_Name: PopUpBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2538,7 +2538,7 @@ GameObject:
   - component: {fileID: 1946190503}
   - component: {fileID: 1946190502}
   m_Layer: 5
-  m_Name: instruction_title
+  m_Name: Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2674,7 +2674,7 @@ GameObject:
   - component: {fileID: 2142326262}
   - component: {fileID: 2142326265}
   m_Layer: 5
-  m_Name: start_button
+  m_Name: StartButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
