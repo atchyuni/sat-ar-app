@@ -18,6 +18,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
+using TMPro;
 
 namespace AvatarSDK.MetaPerson.MobileIntegrationSample
 {
@@ -36,23 +37,26 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
 
     public class MobileUnitySampleHandler : MonoBehaviour
     {
+        [Header("MetaPerson Defaults")]
         public AccountCredentials credentials;
 
         public MetaPersonLoader metaPersonLoader;
-
-        public GameObject popupBox; 
-
         public GameObject uniWebViewGameObject;
-
         public GameObject importControls;
-
-        public Button getAvatarButton;
-
-        public Button proceedButton;
-
         public Text progressText;
 
+        [Header("Create Popup")]
+        public GameObject createPopup;
+        public Button getAvatarButton;
+        public Button proceedButton;
         public GameObject overlayBackground;
+
+        [Header("Start Popup")]
+        public GameObject startPopup;
+        public Button startButton;
+
+        [Header("Avatar UI")]
+        public TMP_InputField shareCodeInputField;
 
         private void Start()
         {
@@ -62,9 +66,9 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
                 getAvatarButton.interactable = false;
             }
 
-            if (popupBox != null)
+            if (createPopup != null)
             {
-                popupBox.SetActive(false);
+                createPopup.SetActive(false);
             }
             if (overlayBackground != null)
             {
@@ -72,21 +76,21 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
             }
         }
 
-        public void OnGetAvatarButtonClick()
+        public void OnCreateAvatarButtonClick()
         {
-            if (popupBox != null && overlayBackground != null)
+            if (createPopup != null && overlayBackground != null)
             {
                 overlayBackground.SetActive(true);
-                popupBox.SetActive(true);
+                createPopup.SetActive(true);
             }
         }
 
         public void OnProceedButtonClick()
         {
-            if (popupBox != null && overlayBackground != null)
+            if (createPopup != null && overlayBackground != null)
             {
                 overlayBackground.SetActive(false);
-                popupBox.SetActive(false);
+                createPopup.SetActive(false);
             }
 
             UniWebView uniWebView = uniWebViewGameObject.GetComponent<UniWebView>();
@@ -101,6 +105,64 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
             uniWebView.OnMessageReceived += OnMessageReceived;
             uniWebView.Load("https://mobile.metaperson.avatarsdk.com/generator");
             uniWebView.Show();
+        }
+
+        public void OnStartButtonClick()
+        {
+            if (startPopup != null && overlayBackground != null)
+            {
+                overlayBackground.SetActive(true);
+                startPopup.SetActive(true);
+            }
+        }
+
+        public void OnExitButtonClick()
+        {
+            if (createPopup != null && overlayBackground != null)
+            {
+                overlayBackground.SetActive(false);
+                createPopup.SetActive(false);
+            }
+
+            if (startPopup != null && overlayBackground != null)
+            {
+                overlayBackground.SetActive(false);
+                startPopup.SetActive(false);
+            }
+        }
+
+        public async void OnLoadAvatarWithShareCode()
+        {
+            if (DBManager.Instance == null)
+            {
+                Debug.LogError("[DBManager] not available");
+                return;
+            }
+
+            string shareCode = shareCodeInputField.text.ToUpper().Trim();
+
+            if (string.IsNullOrWhiteSpace(shareCode))
+            {
+                Debug.LogWarning("missing share code input");
+                return;
+            }
+
+            Debug.Log($"Searching for avatar with share code: {shareCode}...");
+            progressText.text = "STATUS: Finding avatar...";
+
+            var avatarData = await DBManager.Instance.GetAvatarByShareCode(shareCode);
+
+            if (avatarData != null)
+            {
+                Debug.Log($"[DB] found avatar: {avatarData.name}");
+                AvatarManager.Instance.SetCurrentAvatar(avatarData.url, avatarData.name);
+                UnityEngine.SceneManagement.SceneManager.LoadScene("AvatarLoader");
+            }
+            else
+            {
+                Debug.LogError($"[DB] no avatar found with share code: {shareCode}");
+                progressText.text = "ERROR: Invalid share code";
+            }
         }
 
         private void OnPageFinished(UniWebView webView, int statusCode, string url)
@@ -224,7 +286,7 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
                     progressText.text = string.Empty;
                     importControls.SetActive(false);
                     // save and proceed to next scene
-                    AvatarManager.Instance.SetCurrentAvatar(modifiedUrl);
+                    AvatarManager.Instance.SetCurrentAvatar(modifiedUrl, "New Avatar");
                     SceneManager.LoadScene("AvatarDisplay");
                 }
                 else
