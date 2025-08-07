@@ -14,6 +14,11 @@ public class DisplayUI : MonoBehaviour
     [SerializeField] private GameObject codeDisplay;
     [SerializeField] private TMP_Text codeText;
 
+    public void GoToStartupScene()
+    {
+        SceneManager.LoadScene("Startup");
+    }
+
     private void Start()
     {
         if (backgroundOverlay != null)

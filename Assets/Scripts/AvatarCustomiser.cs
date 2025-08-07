@@ -7,7 +7,9 @@ public class AvatarCustomiser : MonoBehaviour
     public FacialSwitcher facialSwitcher;
     public AnimationManager animationManager;
 
-    [Header("UI Toggles")]
+    [Header("UI References")]
+    public ToggleGroup facialExpressionGroup;
+    public ToggleGroup bodyAnimationGroup;
     public Toggle happyFaceToggle;
     public Toggle sadFaceToggle;
     public Toggle happyBodyToggle;
@@ -33,7 +35,20 @@ public class AvatarCustomiser : MonoBehaviour
         SetIdleFace();
         SetIdleBody();
         isInitialized = true;
+
+        // Debug.Log("---------- AVATAR HIERARCHY ----------");
+        // PrintHierarchy(avatarObject.transform, "");
+        // Debug.Log("------------------------------------");
     }
+
+    // private void PrintHierarchy(Transform t, string indent)
+    // {
+    //     Debug.Log(indent + t.name);
+    //     foreach (Transform child in t)
+    //     {
+    //         PrintHierarchy(child, indent + "  ");
+    //     }
+    // }
 
     #region Facial Expression Methods
     public void OnHappyFaceToggle(bool isOn)
@@ -49,8 +64,11 @@ public class AvatarCustomiser : MonoBehaviour
     public void SetIdleFace()
     {
         if (!isInitialized) return;
-        happyFaceToggle.isOn = false;
-        sadFaceToggle.isOn = false;
+        if (facialExpressionGroup != null)
+        {
+            facialExpressionGroup.SetAllTogglesOff();
+        }
+        
         facialSwitcher.SetIdle();
     }
     #endregion
@@ -69,8 +87,11 @@ public class AvatarCustomiser : MonoBehaviour
     public void SetIdleBody()
     {
         if (!isInitialized) return;
-        happyBodyToggle.isOn = false;
-        sadBodyToggle.isOn = false;
+        if (bodyAnimationGroup != null)
+        {
+            bodyAnimationGroup.SetAllTogglesOff();
+        }
+
         animationManager.SetIdle();
     }
     #endregion
