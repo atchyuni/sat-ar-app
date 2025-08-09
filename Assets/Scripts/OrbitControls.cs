@@ -20,11 +20,22 @@ public class OrbitControls : MonoBehaviour
     private Vector3 rotationVelocity;
     private Vector3 currentRotation;
 
-    void Start()
+    // void Start()
+    // {
+    //     Vector3 angles = transform.eulerAngles;
+    //     x = angles.y;
+    //     y = angles.x;
+    // }
+    public void InitialiseWithNewTarget(Transform newTarget)
     {
+        target = newTarget;
+
         Vector3 angles = transform.eulerAngles;
         x = angles.y;
         y = angles.x;
+        currentRotation = new Vector3(y, x);
+
+        y = Mathf.Clamp(y, yMinLimit, yMaxLimit);
     }
 
     void LateUpdate()

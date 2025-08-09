@@ -109,6 +109,8 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
 
         public void OnStartButtonClick()
         {
+            shareCodeInputField.text = "";
+            
             if (startPopup != null && overlayBackground != null)
             {
                 overlayBackground.SetActive(true);
