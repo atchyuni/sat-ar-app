@@ -157,7 +157,7 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
             if (avatarData != null)
             {
                 Debug.Log($"[DB] found avatar: {avatarData.name}");
-                AvatarManager.Instance.SetCurrentAvatar(avatarData.url, avatarData.name);
+                AvatarManager.Instance.SetCurrentAvatar(avatarData.url, avatarData.name, avatarData.days_completed);
                 UnityEngine.SceneManagement.SceneManager.LoadScene("AvatarLoader");
             }
             else

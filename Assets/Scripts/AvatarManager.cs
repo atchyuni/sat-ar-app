@@ -6,6 +6,7 @@ public class AvatarManager : MonoBehaviour
     public static AvatarManager Instance { get; private set; }
     public string CurrentAvatarUrl { get; private set; }
     public string CurrentAvatarName { get; private set; }
+    public int CurrentDaysCompleted { get; private set; }
 
     private void Awake()
     {
@@ -23,18 +24,23 @@ public class AvatarManager : MonoBehaviour
         }
     }
 
-    public void SetCurrentAvatar(string avatarUrl, string avatarName)
+    public void SetCurrentAvatar(string avatarUrl, string avatarName, int daysCompleted)
     {
-        Debug.Log("SetCurrentAvatar called with: " + avatarUrl);
-
         if (string.IsNullOrEmpty(avatarUrl))
         {
             Debug.LogError("SetCurrentAvatar received null avatar or empty url");
             return;
         }
- 
+
         CurrentAvatarUrl = avatarUrl;
         CurrentAvatarName = avatarName;
+        CurrentDaysCompleted = daysCompleted;
         Debug.Log($"[AvatarManager] SetCurrentAvatar called with: {avatarUrl}");
+    }
+    
+    // overload for "create avatar" flow, which starts at 0 days
+    public void SetCurrentAvatar(string avatarUrl, string avatarName)
+    {
+        SetCurrentAvatar(avatarUrl, avatarName, 0);
     }
 }

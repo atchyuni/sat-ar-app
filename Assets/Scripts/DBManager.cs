@@ -15,10 +15,18 @@ public class DBManager : MonoBehaviour
     [System.Serializable]
     public class AvatarData
     {
-        public string name;
-        public string url;
-        public string share_code;
+        public string name, url, share_code;
+        public int days_completed;
     }
+
+    [System.Serializable]
+    private class PostData
+    {
+        public string name, url, share_code;
+        public int days_completed = 0;
+    }
+
+    [System.Serializable] private class AvatarList { public AvatarData[] avatars; }
 
     private void Awake()
     {
@@ -59,7 +67,7 @@ public class DBManager : MonoBehaviour
             if (success) return generatedCode;
         }
 
-        Debug.LogError($"failed to save avatar after {maxRetries} attempts");
+        Debug.LogError($"[DBManager] failed to save avatar after {maxRetries} attempts");
         return null;
     }
 
@@ -70,7 +78,6 @@ public class DBManager : MonoBehaviour
         return await tcs.Task;
     }
 
-    [System.Serializable] private class PostData { public string name, url, share_code; }
     private IEnumerator PostAvatarData(string name, string url, string code, System.Action<bool> callback)
     {
         var data = new PostData { name = name, url = url, share_code = code };
@@ -90,7 +97,6 @@ public class DBManager : MonoBehaviour
         }
     }
     
-    [System.Serializable] private class AvatarList { public AvatarData[] avatars; }
     private IEnumerator FetchAvatarData(string code, System.Action<AvatarData> callback)
     {
         string requestUrl = $"{dbUrl}/rest/v1/avatars?share_code=eq.{code}&select=*&limit=1";

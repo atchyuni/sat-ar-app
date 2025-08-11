@@ -10,6 +10,7 @@ public class AvatarLoader : MonoBehaviour
     [SerializeField] private MetaPersonLoader metaPersonLoader;
     [SerializeField] private SimpleOrbit cameraControls;
     [SerializeField] private TMP_Text nameText;
+    [SerializeField] private ProgressBarUI progressBar;
 
     [Header("Avatar Positioning")]
     [SerializeField] private Vector3 avatarWorldPosition = new Vector3(0, 0, 0);
@@ -22,25 +23,32 @@ public class AvatarLoader : MonoBehaviour
 
     async void Start()
     {
+        // --- RETRIEVE DATA ---
         string avatarUrl = AvatarManager.Instance.CurrentAvatarUrl;
         string avatarName = AvatarManager.Instance.CurrentAvatarName;
+        int daysCompleted = AvatarManager.Instance.CurrentDaysCompleted;
 
-        // update title
+        // --- UI UPDATE ---
         if (nameText != null && !string.IsNullOrEmpty(avatarName))
         {
             nameText.text = $"++{avatarName}++";
         }
 
-        // load model
-        if (metaPersonLoader == null || cameraControls == null)
+        if (progressBar != null)
         {
-            Debug.LogError("[MetaPersonLoader] or [CameraControls] not assigned");
-            return;
+            progressBar.UpdateProgress(daysCompleted);
         }
+
+        // --- LOAD MODEL ---
+            if (metaPersonLoader == null || cameraControls == null)
+            {
+                Debug.LogError("[MetaPersonLoader] or [CameraControls] not assigned");
+                return;
+            }
 
         if (!string.IsNullOrEmpty(avatarUrl))
         {
-            Debug.Log($"loading model from: {avatarUrl}");
+            Debug.Log($"[AvatarLoader] from [AvatarManager]: {avatarUrl}");
             bool isLoaded = await metaPersonLoader.LoadModelAsync(avatarUrl);
 
             if (isLoaded)
