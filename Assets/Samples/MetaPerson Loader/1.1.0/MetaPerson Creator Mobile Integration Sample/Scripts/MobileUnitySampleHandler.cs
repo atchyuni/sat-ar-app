@@ -248,7 +248,7 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
         private async Task ProcessAvatarOnServer(string originalUrl)
         {
             // --- 1. prepare request for server ---
-            string serverApiUrl = "http://127.0.0.1:5000/process-avatar";
+            string serverApiUrl = "http://172.20.10.3:5000/process-avatar";
             
             var requestData = new AvatarProcessRequest { url = originalUrl };
             string jsonBody = JsonUtility.ToJson(requestData);

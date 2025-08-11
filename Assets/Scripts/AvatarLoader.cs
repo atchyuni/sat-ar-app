@@ -54,7 +54,7 @@ public class AvatarLoader : MonoBehaviour
         // --- LOAD MODEL ---
         if (metaPersonLoader == null || cameraControls == null)
         {
-            Debug.LogError("[MetaPersonLoader] or [CameraControls] not assigned");
+            Debug.LogError("ERROR: [MetaPersonLoader] or [CameraControls] not assigned");
             return;
         }
 
