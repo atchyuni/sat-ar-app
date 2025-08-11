@@ -13,6 +13,9 @@ public class ARAvatarHandler : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] private GameObject loadingPanel;
+    [SerializeField] private GameObject instructionBox;
+    public GameObject controlButton;
+    public GameObject customControls;
 
     [SerializeField] private ARPlaneManager arPlaneManager;
     private ARRaycastManager arRaycastManager;
@@ -22,12 +25,18 @@ public class ARAvatarHandler : MonoBehaviour
     void Awake()
     {
         arRaycastManager = GetComponent<ARRaycastManager>();
+        if (instructionBox != null) instructionBox.SetActive(true);
         if (placementIndicator != null) placementIndicator.SetActive(false);
         if (loadingPanel != null) loadingPanel.SetActive(false);
     }
 
     void Update()
     {
+        if (instructionBox != null && instructionBox.activeInHierarchy)
+        {
+            return;
+        }
+
         if (placedAvatarInstance == null)
         {
             UpdatePlacementIndicator();
@@ -59,6 +68,23 @@ public class ARAvatarHandler : MonoBehaviour
         }
     }
 
+    public void HideInstructionBox()
+    {
+        if (instructionBox != null)
+        {
+            instructionBox.SetActive(false);
+        }
+    }
+
+    public void OnControlButtonClick()
+    {
+        if (customControls != null)
+        {
+            customControls.SetActive(true);
+            controlButton.SetActive(false);
+        }
+    }
+
     private async void PlaceAvatarAsync(Pose placementPose)
     {
         string avatarUrl = AvatarManager.Instance.CurrentAvatarUrl;
@@ -86,8 +112,6 @@ public class ARAvatarHandler : MonoBehaviour
                 placedAvatarInstance.transform.Rotate(0, 180, 0);
 
                 SetPlaneVisualsActive(false);
-
-                // TODO: hide "Loading..." UI message
             }
         }
         finally
