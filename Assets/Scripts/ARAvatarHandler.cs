@@ -11,6 +11,10 @@ public class ARAvatarHandler : MonoBehaviour
     [SerializeField] private MetaPersonLoader metaPersonLoader;
     [SerializeField] private GameObject placementIndicator;
 
+    [Header("UI")]
+    [SerializeField] private GameObject loadingPanel;
+
+    [SerializeField] private ARPlaneManager arPlaneManager;
     private ARRaycastManager arRaycastManager;
     private GameObject placedAvatarInstance;
     private static List<ARRaycastHit> hits = new List<ARRaycastHit>();
@@ -19,30 +23,43 @@ public class ARAvatarHandler : MonoBehaviour
     {
         arRaycastManager = GetComponent<ARRaycastManager>();
         if (placementIndicator != null) placementIndicator.SetActive(false);
+        if (loadingPanel != null) loadingPanel.SetActive(false);
     }
 
     void Update()
     {
-        UpdatePlacementIndicator();
+        if (placedAvatarInstance == null)
+        {
+            UpdatePlacementIndicator();
+        }
 
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
         {
-            if (placementIndicator.activeSelf) // place if indicator on valid plane
+            if (arRaycastManager.Raycast(Input.GetTouch(0).position, hits, TrackableType.PlaneWithinPolygon))
             {
+                var hitPose = hits[0].pose;
+
                 if (placedAvatarInstance == null)
                 {
-                    PlaceAvatarAsync();
+                    PlaceAvatarAsync(hitPose);
                 }
                 else
                 {
-                    placedAvatarInstance.transform.position = placementIndicator.transform.position;
-                    placedAvatarInstance.transform.rotation = placementIndicator.transform.rotation;
+                    // --- REPOSITIONING (RAYCAST) ---
+                    // 1. set new position
+                    placedAvatarInstance.transform.position = hitPose.position;
+
+                    // 2. rotate to face camera (horizontally)
+                    Vector3 cameraPosition = Camera.main.transform.position;
+                    Vector3 directionToCamera = cameraPosition - placedAvatarInstance.transform.position;
+                    directionToCamera.y = 0;
+                    placedAvatarInstance.transform.rotation = Quaternion.LookRotation(directionToCamera);
                 }
             }
         }
     }
 
-    private async void PlaceAvatarAsync()
+    private async void PlaceAvatarAsync(Pose placementPose)
     {
         string avatarUrl = AvatarManager.Instance.CurrentAvatarUrl;
         if (string.IsNullOrEmpty(avatarUrl))
@@ -51,37 +68,40 @@ public class ARAvatarHandler : MonoBehaviour
             return;
         }
 
-        // store placement & disable indicator while loading
-        Vector3 placementPosition = placementIndicator.transform.position;
-        Quaternion placementRotation = placementIndicator.transform.rotation;
         placementIndicator.SetActive(false);
-        
-        // TODO: "Loading in AR Environment..." UI
-        
-        bool isLoaded = await metaPersonLoader.LoadModelAsync(avatarUrl);
-        if (isLoaded)
+
+        try
         {
-            // create independent instance of avatar & position
-            GameObject originalAvatar = metaPersonLoader.transform.GetChild(0).gameObject;
-            placedAvatarInstance = Instantiate(originalAvatar);
-            originalAvatar.SetActive(false);
+            if (loadingPanel != null) loadingPanel.SetActive(true);
 
-            placedAvatarInstance.transform.position = placementPosition;
-            placedAvatarInstance.transform.rotation = placementRotation;
-            placedAvatarInstance.transform.Rotate(0, 180, 0);
+            bool isLoaded = await metaPersonLoader.LoadModelAsync(avatarUrl);
+            if (isLoaded)
+            {
+                GameObject originalAvatar = metaPersonLoader.transform.GetChild(0).gameObject;
+                placedAvatarInstance = Instantiate(originalAvatar);
+                originalAvatar.SetActive(false);
 
-            // TODO: hide "Loading..." UI
+                placedAvatarInstance.transform.position = placementPose.position;
+                placedAvatarInstance.transform.rotation = placementPose.rotation;
+                placedAvatarInstance.transform.Rotate(0, 180, 0);
+
+                SetPlaneVisualsActive(false);
+
+                // TODO: hide "Loading..." UI message
+            }
+        }
+        finally
+        {
+            if (loadingPanel != null) loadingPanel.SetActive(false);
         }
     }
 
     private void UpdatePlacementIndicator()
     {
-        // shoot ray from screen center
         Vector2 screenCenter = new Vector2(Screen.width / 2, Screen.height / 2);
         
         if (arRaycastManager.Raycast(screenCenter, hits, TrackableType.PlaneWithinPolygon))
         {
-            // if plane hit, update indicator pose
             var hitPose = hits[0].pose;
             if (placementIndicator != null)
             {
@@ -91,8 +111,18 @@ public class ARAvatarHandler : MonoBehaviour
         }
         else
         {
-            // else, hide indicator
             if (placementIndicator != null) placementIndicator.SetActive(false);
+        }
+    }
+
+    // helper to toggle plane visuals
+    private void SetPlaneVisualsActive(bool isActive)
+    {
+        if (arPlaneManager == null) return;
+
+        foreach (var plane in arPlaneManager.trackables)
+        {
+            plane.gameObject.SetActive(isActive);
         }
     }
 }
