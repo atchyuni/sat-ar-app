@@ -3,6 +3,7 @@ using TMPro;
 using AvatarSDK.MetaPerson.Loader;
 using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class AvatarLoader : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class AvatarLoader : MonoBehaviour
     [SerializeField] private SimpleOrbit cameraControls;
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private ProgressBarUI progressBar;
+    [SerializeField] private TMP_Text quoteText;
 
     [Header("Avatar Positioning")]
     [SerializeField] private Vector3 avatarWorldPosition = new Vector3(0, 0, 0);
@@ -20,6 +22,14 @@ public class AvatarLoader : MonoBehaviour
     public GameObject customControls;
     public GameObject tipBox;
     public GameObject controlButton;
+    
+    private List<string> quotes = new List<string>
+    {
+        "Believe you can",
+        "You can do this",
+        "Every small step counts",
+        "You are doing great work",
+    };
 
     async void Start()
     {
@@ -29,6 +39,8 @@ public class AvatarLoader : MonoBehaviour
         int daysCompleted = AvatarManager.Instance.CurrentDaysCompleted;
 
         // --- UI UPDATE ---
+        DisplayRandomQuote();
+
         if (nameText != null && !string.IsNullOrEmpty(avatarName))
         {
             nameText.text = $"++{avatarName}++";
@@ -40,11 +52,11 @@ public class AvatarLoader : MonoBehaviour
         }
 
         // --- LOAD MODEL ---
-            if (metaPersonLoader == null || cameraControls == null)
-            {
-                Debug.LogError("[MetaPersonLoader] or [CameraControls] not assigned");
-                return;
-            }
+        if (metaPersonLoader == null || cameraControls == null)
+        {
+            Debug.LogError("[MetaPersonLoader] or [CameraControls] not assigned");
+            return;
+        }
 
         if (!string.IsNullOrEmpty(avatarUrl))
         {
@@ -67,6 +79,15 @@ public class AvatarLoader : MonoBehaviour
         else
         {
             Debug.LogWarning("[AvatarManager] missing url");
+        }
+    }
+
+    private void DisplayRandomQuote()
+    {
+        if (quoteText != null && quotes.Count > 0)
+        {
+            int randomIndex = Random.Range(0, quotes.Count);            
+            quoteText.text = $"[ {quotes[randomIndex]} ]";
         }
     }
 
