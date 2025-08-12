@@ -22,7 +22,6 @@ using TMPro;
 
 namespace AvatarSDK.MetaPerson.MobileIntegrationSample
 {
-    // helper classes for json serialization
     [System.Serializable]
     public class AvatarProcessRequest
     {
@@ -54,15 +53,13 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
         [Header("Start Popup")]
         public GameObject startPopup;
         public Button startButton;
-
-        [Header("Avatar UI")]
         public TMP_InputField shareCodeInputField;
 
         private void Start()
         {
             if (credentials.IsEmpty())
             {
-                progressText.text = "ERROR: Account credentials not provided";
+                progressText.text = "Error: Account credentials not provided";
                 getAvatarButton.interactable = false;
             }
 
@@ -149,21 +146,39 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
                 return;
             }
 
-            Debug.Log($"Searching for avatar with share code: {shareCode}...");
-            progressText.text = "STATUS: Finding avatar...";
+            Debug.Log($"[DB] searching for avatar with: {shareCode}...");
+            progressText.text = "Status: Finding avatar...";
 
             var avatarData = await DBManager.Instance.GetAvatarByShareCode(shareCode);
 
             if (avatarData != null)
             {
-                Debug.Log($"[DB] found avatar: {avatarData.name}");
+                // --- PROGRESS CHECK ---
+                DateTime today = DateTime.UtcNow;
+                DateTime lastLogged = DateTime.Parse(avatarData.last_logged, null, System.Globalization.DateTimeStyles.RoundtripKind);
+
+                if (today.Date > lastLogged.Date)
+                {
+                    Debug.Log("[Login] new day detected, incrementing days_completed");
+                    int newDaysCompleted = avatarData.days_completed + 1;
+
+                    // db update
+                    await DBManager.Instance.UpdateAvatarProgress(shareCode, newDaysCompleted, today);
+
+                    avatarData.days_completed = newDaysCompleted;
+                }
+                else
+                {
+                    Debug.Log("[Login] no change to days_completed");
+                }
+
                 AvatarManager.Instance.SetCurrentAvatar(avatarData.url, avatarData.name, avatarData.days_completed);
                 UnityEngine.SceneManagement.SceneManager.LoadScene("AvatarLoader");
             }
             else
             {
-                Debug.LogError($"[DB] no avatar found with share code: {shareCode}");
-                progressText.text = "ERROR: Invalid share code";
+                Debug.LogError($"[DB] no avatar found with: {shareCode}");
+                progressText.text = "Error: Invalid share code";
             }
         }
 
@@ -226,7 +241,7 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
                     }
                 ";
 
-            webView.AddJavaScript(javaScriptCode, payload => Debug.LogWarningFormat("JS exection result: {0}", payload.resultCode));
+            webView.AddJavaScript(javaScriptCode, payload => Debug.LogWarningFormat("JS Execution: {0}", payload.resultCode));
         }
 
         private void OnMessageReceived(UniWebView webView, UniWebViewMessage message)
@@ -234,11 +249,11 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
             if (message.Path == "model_exported")
             {
                 string originalUrl = message.Args["url"];
-                Debug.Log("original avatar url: " + originalUrl);
+                Debug.Log("[Server] original url: " + originalUrl);
 
                 webView.Hide();
                 getAvatarButton.interactable = false;
-                progressText.text = "STATUS: Modifying Avatar using Blender...";
+                progressText.text = "Status: Modifying Avatar using Blender...";
 
                 // start new server-side processing
                 _ = ProcessAvatarOnServer(originalUrl);
@@ -247,7 +262,6 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
 
         private async Task ProcessAvatarOnServer(string originalUrl)
         {
-            // --- 1. prepare request for server ---
             string serverApiUrl = "http://172.20.10.3:5000/process-avatar";
             
             var requestData = new AvatarProcessRequest { url = originalUrl };
@@ -260,26 +274,24 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
                 www.downloadHandler = new DownloadHandlerBuffer();
                 www.SetRequestHeader("Content-Type", "application/json");
 
-                // --- 2. send request ---
                 try
                 {
                     await www.SendWebRequest();
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError("server error: " + e.Message);
-                    progressText.text = "STATUS: Failed to modify Avatar";
+                    Debug.LogError("Error: [Server] " + e.Message);
+                    progressText.text = "Status: Failed to modify Avatar";
                     getAvatarButton.interactable = true;
                     return; // exit method on failure
                 }
             
-                // --- 3. load modified model from new url ---
                 string responseJson = www.downloadHandler.text;
                 var responseData = JsonUtility.FromJson<AvatarProcessResponse>(responseJson);
                 string modifiedUrl = responseData.newUrl;
 
-                Debug.Log("modified avatar url: " + modifiedUrl);
-                progressText.text = "STATUS: Loading modified Avatar...";
+                Debug.Log("[Server] modified url: " + modifiedUrl);
+                progressText.text = "Status: Loading modified Avatar...";
 
                 bool isLoaded = await metaPersonLoader.LoadModelAsync(modifiedUrl, p => progressText.text = string.Format("DOWNLOADING: {0}%", (int)(p * 100)));
                 
@@ -287,13 +299,12 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
                 {
                     progressText.text = string.Empty;
                     importControls.SetActive(false);
-                    // save and proceed to next scene
                     AvatarManager.Instance.SetCurrentAvatar(modifiedUrl, "New Avatar");
                     SceneManager.LoadScene("AvatarDisplay");
                 }
                 else
                 {
-                    progressText.text = "ERROR: Failed to load modified Avatar";
+                    progressText.text = "Error: Failed to load modified Avatar";
                     getAvatarButton.interactable = true;
                 }
             }

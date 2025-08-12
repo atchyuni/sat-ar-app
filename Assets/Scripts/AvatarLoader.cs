@@ -43,7 +43,7 @@ public class AvatarLoader : MonoBehaviour
 
         if (nameText != null && !string.IsNullOrEmpty(avatarName))
         {
-            nameText.text = $"++{avatarName}++";
+            nameText.text = $"{avatarName}";
         }
 
         if (progressBar != null)

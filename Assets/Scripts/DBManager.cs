@@ -3,6 +3,7 @@ using UnityEngine.Networking;
 using System.Text;
 using System.Collections;
 using System.Threading.Tasks;
+using System;
 
 public class DBManager : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class DBManager : MonoBehaviour
     [System.Serializable]
     public class AvatarData
     {
-        public string name, url, share_code;
+        public string name, url, share_code, last_logged;
         public int days_completed;
     }
 
@@ -27,6 +28,13 @@ public class DBManager : MonoBehaviour
     }
 
     [System.Serializable] private class AvatarList { public AvatarData[] avatars; }
+
+    [System.Serializable]
+    private class UpdateData
+    {
+        public int days_completed;
+        public string last_logged;
+    }
 
     private void Awake()
     {
@@ -47,7 +55,7 @@ public class DBManager : MonoBehaviour
         char[] code = new char[6];
         for (int i = 0; i < code.Length; i++)
         {
-            code[i] = chars[Random.Range(0, chars.Length)];
+            code[i] = chars[UnityEngine.Random.Range(0, chars.Length)];
         }
         return new string(code);
     }
@@ -76,6 +84,42 @@ public class DBManager : MonoBehaviour
         var tcs = new TaskCompletionSource<AvatarData>();
         StartCoroutine(FetchAvatarData(shareCode.ToUpper(), (avatar) => tcs.SetResult(avatar)));
         return await tcs.Task;
+    }
+
+    public async Task<bool> UpdateAvatarProgress(string shareCode, int newDaysCompleted, DateTime newLoginDate)
+    {
+        var tcs = new TaskCompletionSource<bool>();
+        StartCoroutine(PatchAvatarData(shareCode, newDaysCompleted, newLoginDate, (isSuccess) => tcs.SetResult(isSuccess)));
+        return await tcs.Task;
+    }
+
+    private IEnumerator PatchAvatarData(string shareCode, int days, DateTime date, System.Action<bool> callback)
+    {
+        // require: dates in iso 8601 format
+        string isoDate = date.ToUniversalTime().ToString("o");
+        var data = new UpdateData { days_completed = days, last_logged = isoDate };
+        string json = JsonUtility.ToJson(data);
+        byte[] jsonToSend = new UTF8Encoding().GetBytes(json);
+
+        string requestUrl = $"{dbUrl}/rest/v1/avatars?share_code=eq.{shareCode}";
+
+        using (UnityWebRequest request = new UnityWebRequest(requestUrl, "PATCH"))
+        {
+            request.uploadHandler = new UploadHandlerRaw(jsonToSend);
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("apikey", dbAnonKey);
+            request.SetRequestHeader("Authorization", $"Bearer {dbAnonKey}");
+            request.SetRequestHeader("Content-Type", "application/json");
+            request.SetRequestHeader("Prefer", "return=minimal");
+
+            yield return request.SendWebRequest();
+            
+            if (request.responseCode != 204) // PATCH success
+            {
+                Debug.LogError($"ERROR: [DBManager] {request.error} | {request.downloadHandler.text}");
+            }
+            callback(request.responseCode == 204);
+        }
     }
 
     private IEnumerator PostAvatarData(string name, string url, string code, System.Action<bool> callback)
