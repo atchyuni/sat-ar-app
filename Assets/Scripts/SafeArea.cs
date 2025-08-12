@@ -16,29 +16,33 @@ public class SafeArea : MonoBehaviour
 
     void Update()
     {
-        // check every frame to handle (any) changes
-        if (lastSafeArea != Screen.safeArea)
-        {
-            ApplySafeArea();
-        }
+        ApplySafeArea(); // check every frame
     }
 
     private void ApplySafeArea()
     {
-        lastSafeArea = Screen.safeArea;
+        Rect safeArea = Screen.safeArea;
 
-        // convert safe area rectangle to normalised viewport space
-        Vector2 anchorMin = lastSafeArea.position;
-        Vector2 anchorMax = lastSafeArea.position + lastSafeArea.size;
+        // apply if:
+        // 1. safe area has changed
+        // 2. valid, non-zero size
+        if (safeArea != lastSafeArea && safeArea.width > 0)
+        {
+            lastSafeArea = safeArea;
 
-        anchorMin.x /= Screen.width;
-        anchorMin.y /= Screen.height;
-        anchorMax.x /= Screen.width;
-        anchorMax.y /= Screen.height;
+            // convert from pixel to normalized anchor space (0 to 1)
+            Vector2 anchorMin = safeArea.position;
+            Vector2 anchorMax = safeArea.position + safeArea.size;
 
-        panel.anchorMin = anchorMin;
-        panel.anchorMax = anchorMax;
+            anchorMin.x /= Screen.width;
+            anchorMin.y /= Screen.height;
+            anchorMax.x /= Screen.width;
+            anchorMax.y /= Screen.height;
 
-        Debug.Log($"safe area: min({anchorMin.x}, {anchorMin.y}) max({anchorMax.x}, {anchorMax.y})");
+            panel.anchorMin = anchorMin;
+            panel.anchorMax = anchorMax;
+
+            Debug.Log($"[SafeArea] min({anchorMin.x}, {anchorMin.y}), max({anchorMax.x}, {anchorMax.y})");
+        }
     }
 }
