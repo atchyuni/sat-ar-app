@@ -4,6 +4,7 @@ using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using AvatarSDK.MetaPerson.Loader;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(ARRaycastManager))]
 public class ARAvatarHandler : MonoBehaviour
@@ -15,8 +16,10 @@ public class ARAvatarHandler : MonoBehaviour
     [Header("UI")]
     [SerializeField] private GameObject loadingPanel;
     [SerializeField] private GameObject instructionBox;
-    public GameObject emotionButton;
-    public GameObject emotionControls;
+    [SerializeField] private GameObject emotionButton;
+    [SerializeField] private GameObject emotionControls;
+    [SerializeField] private GameObject debriefPopup;
+    [SerializeField] private GameObject backgroundOverlay;
 
     [SerializeField] private ARPlaneManager arPlaneManager;
     private ARRaycastManager arRaycastManager;
@@ -131,7 +134,7 @@ public class ARAvatarHandler : MonoBehaviour
     private void UpdatePlacementIndicator()
     {
         Vector2 screenCenter = new Vector2(Screen.width / 2, Screen.height / 2);
-        
+
         if (arRaycastManager.Raycast(screenCenter, hits, TrackableType.PlaneWithinPolygon))
         {
             var hitPose = hits[0].pose;
@@ -156,5 +159,22 @@ public class ARAvatarHandler : MonoBehaviour
         {
             plane.gameObject.SetActive(isActive);
         }
+    }
+
+    public void ShowDebriefPopup()
+    {
+        if (debriefPopup != null && backgroundOverlay != null)
+        {
+            if (emotionControls != null) emotionControls.SetActive(false);
+            if (emotionButton != null) emotionButton.SetActive(false);
+
+            debriefPopup.SetActive(true);
+            backgroundOverlay.SetActive(true);
+        }
+    }
+    
+    public void ReturnToLoader()
+    {
+        SceneManager.LoadScene("AvatarLoader");
     }
 }

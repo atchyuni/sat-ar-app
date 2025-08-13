@@ -1037,7 +1037,7 @@ GameObject:
   - component: {fileID: 274418364}
   - component: {fileID: 274418363}
   m_Layer: 5
-  m_Name: CustomControls
+  m_Name: EmotionControls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

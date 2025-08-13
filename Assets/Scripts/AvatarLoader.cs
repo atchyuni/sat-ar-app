@@ -21,9 +21,9 @@ public class AvatarLoader : MonoBehaviour
     [SerializeField] private Vector3 cameraOffset = new Vector3(0f, 0.6f, -2.2f);
 
     [Header("Custom Controls")]
-    public GameObject customControls;
+    public GameObject emotionControls;
     public GameObject tipBox;
-    public GameObject controlButton;
+    public GameObject emotionButton;
 
     private List<string> quotes = new List<string>
     {
@@ -111,12 +111,12 @@ public class AvatarLoader : MonoBehaviour
         SceneManager.LoadScene("Startup");
     }
 
-    public void OnControlButtonClick()
+    public void OnEmotionClick()
     {
-        if (customControls != null)
+        if (emotionControls != null)
         {
-            customControls.SetActive(true);
-            controlButton.SetActive(false);
+            emotionControls.SetActive(true);
+            emotionButton.SetActive(false);
             tipBox.SetActive(false);
         }
     }
