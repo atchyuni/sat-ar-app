@@ -38,13 +38,12 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
     {
         [Header("MetaPerson Defaults")]
         public AccountCredentials credentials;
-
         public MetaPersonLoader metaPersonLoader;
         public GameObject uniWebViewGameObject;
         public GameObject importControls;
         public Text progressText;
 
-        [Header("Create Popup")]
+        [Header("Create AvatarPopup")]
         public GameObject createPopup;
         public Button getAvatarButton;
         public Button proceedButton;
@@ -53,7 +52,7 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
         [Header("Start Popup")]
         public GameObject startPopup;
         public Button startButton;
-        public TMP_InputField shareCodeInputField;
+        public TMP_InputField shareCodeInput;
         
         private void Start()
         {
@@ -73,7 +72,7 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
             }
         }
 
-        public void OnCreateAvatarButtonClick()
+        public void OnCreateAvatarClick()
         {
             if (createPopup != null && overlayBackground != null)
             {
@@ -82,7 +81,7 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
             }
         }
 
-        public void OnProceedButtonClick()
+        public void OnProceedClick()
         {
             if (createPopup != null && overlayBackground != null)
             {
@@ -104,9 +103,9 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
             uniWebView.Show();
         }
 
-        public void OnStartButtonClick()
+        public void OnStartClick()
         {
-            shareCodeInputField.text = "";
+            shareCodeInput.text = "";
             
             if (startPopup != null && overlayBackground != null)
             {
@@ -115,7 +114,7 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
             }
         }
 
-        public void OnExitButtonClick()
+        public void OnClose()
         {
             if (createPopup != null && overlayBackground != null)
             {
@@ -130,7 +129,7 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
             }
         }
 
-        public async void OnLoadAvatarWithShareCode()
+        public async void LoadAvatarWithShareCode()
         {
             if (DBManager.Instance == null)
             {
@@ -138,11 +137,11 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
                 return;
             }
 
-            string shareCode = shareCodeInputField.text.ToUpper().Trim();
+            string shareCode = shareCodeInput.text.ToUpper().Trim();
 
             if (string.IsNullOrWhiteSpace(shareCode))
             {
-                Debug.LogWarning("missing share code input");
+                Debug.LogWarning("[LoadAvatarWithShareCode] missing input");
                 return;
             }
 
@@ -154,20 +153,19 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
             if (avatarData != null)
             {
                 // --- DAILY PROGRESS CHECK ---
-                DateTime todayLocal = DateTime.Now;
-                DateTime lastLoggedUtc = DateTime.Parse(avatarData.last_logged, null, System.Globalization.DateTimeStyles.RoundtripKind);
-                DateTime lastLoggedLocal = lastLoggedUtc.ToLocalTime();
+                DateTime today_local = DateTime.Now;
+                DateTime last_logged_utc = DateTime.Parse(avatarData.last_logged, null, System.Globalization.DateTimeStyles.RoundtripKind);
+                DateTime last_logged_local = last_logged_utc.ToLocalTime();
 
-                if (todayLocal.Date > lastLoggedLocal.Date)
+                if (today_local.Date > last_logged_local.Date)
                 {
                     Debug.Log("[Login] new day detected, incrementing days_completed");
-                    int newDaysCompleted = avatarData.days_completed + 1;
-                    await DBManager.Instance.UpdateAvatarProgress(shareCode, newDaysCompleted, DateTime.UtcNow);
-                    avatarData.days_completed = newDaysCompleted;
+                    int new_days = avatarData.days_completed + 1;
+                    await DBManager.Instance.UpdateAvatarProgress(shareCode, new_days, DateTime.UtcNow);
+                    avatarData.days_completed = new_days;
                 }
 
-                // pass data to manager
-                ProceedToAvatarLoader(avatarData);
+                ProceedToUserHome(avatarData);
             }
             else
             {
@@ -176,10 +174,10 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
             }
         }
 
-        private void ProceedToAvatarLoader(DBManager.AvatarData avatarData)
+        private void ProceedToUserHome(DBManager.AvatarData avatarData)
         {
             AvatarManager.Instance.SetCurrentAvatar(avatarData.url, avatarData.name, avatarData.days_completed);            
-            SceneManager.LoadScene("AvatarLoader");
+            SceneManager.LoadScene("UserHome");
         }
 
         // --- DEBUGGING: reset checklist date ---
@@ -259,29 +257,29 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
         {
             if (message.Path == "model_exported")
             {
-                string originalUrl = message.Args["url"];
-                Debug.Log("[Server] original url: " + originalUrl);
+                string original_url = message.Args["url"];
+                Debug.Log("[Server] original url: " + original_url);
 
                 webView.Hide();
                 getAvatarButton.interactable = false;
                 progressText.text = "Status: Modifying Avatar using Blender...";
 
                 // start new server-side processing
-                _ = ProcessAvatarOnServer(originalUrl);
+                _ = ServerProcessing(original_url);
             }
         }
 
-        private async Task ProcessAvatarOnServer(string originalUrl)
+        private async Task ServerProcessing(string originalUrl)
         {
-            string serverApiUrl = "http://172.20.10.3:5000/process-avatar";
+            string server_api = "http://172.20.10.3:5000/process-avatar";
             
-            var requestData = new AvatarProcessRequest { url = originalUrl };
-            string jsonBody = JsonUtility.ToJson(requestData);
-            byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonBody);
+            var request_data = new AvatarProcessRequest { url = originalUrl };
+            string json_body = JsonUtility.ToJson(request_data);
+            byte[] raw_body = Encoding.UTF8.GetBytes(json_body);
 
-            using (UnityWebRequest www = new UnityWebRequest(serverApiUrl, "POST"))
+            using (UnityWebRequest www = new UnityWebRequest(server_api, "POST"))
             {
-                www.uploadHandler = new UploadHandlerRaw(bodyRaw);
+                www.uploadHandler = new UploadHandlerRaw(raw_body);
                 www.downloadHandler = new DownloadHandlerBuffer();
                 www.SetRequestHeader("Content-Type", "application/json");
 
@@ -291,26 +289,26 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError("Error: [Server] " + e.Message);
+                    Debug.LogError("ERROR: [Server] " + e.Message);
                     progressText.text = "Status: Failed to modify Avatar";
                     getAvatarButton.interactable = true;
-                    return; // exit method on failure
+                    return;
                 }
             
-                string responseJson = www.downloadHandler.text;
-                var responseData = JsonUtility.FromJson<AvatarProcessResponse>(responseJson);
-                string modifiedUrl = responseData.newUrl;
+                string response_json = www.downloadHandler.text;
+                var response_data = JsonUtility.FromJson<AvatarProcessResponse>(response_json);
+                string modified_url = response_data.newUrl;
 
-                Debug.Log("[Server] modified url: " + modifiedUrl);
+                Debug.Log("[Server] modified url: " + modified_url);
                 progressText.text = "Status: Loading modified Avatar...";
 
-                bool isLoaded = await metaPersonLoader.LoadModelAsync(modifiedUrl, p => progressText.text = string.Format("DOWNLOADING: {0}%", (int)(p * 100)));
+                bool loaded = await metaPersonLoader.LoadModelAsync(modified_url, p => progressText.text = string.Format("Downloading: {0}%", (int)(p * 100)));
                 
-                if (isLoaded)
+                if (loaded)
                 {
                     progressText.text = string.Empty;
                     importControls.SetActive(false);
-                    AvatarManager.Instance.SetCurrentAvatar(modifiedUrl, "New Avatar");
+                    AvatarManager.Instance.SetCurrentAvatar(modified_url, "New Avatar");
                     SceneManager.LoadScene("AvatarDisplay");
                 }
                 else

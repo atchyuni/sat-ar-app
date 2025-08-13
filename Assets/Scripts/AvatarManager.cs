@@ -28,7 +28,7 @@ public class AvatarManager : MonoBehaviour
     {
         if (string.IsNullOrEmpty(avatarUrl))
         {
-            Debug.LogError("SetCurrentAvatar received null avatar or empty url");
+            Debug.LogError("[SetCurrentAvatar] null avatar or empty url");
             return;
         }
 

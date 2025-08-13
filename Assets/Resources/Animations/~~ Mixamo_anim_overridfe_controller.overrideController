@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ~~ Mixamo_anim_overridfe_controller
+  m_Controller: {fileID: 9100000, guid: de523cb04295727478d671f2e3c3dee9, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: -203655887218126122, guid: 13bb1a3a95e4819409642adc2ca23427, type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: 0f8f2fecdef65884590c2557ec0d679e, type: 3}
+  - m_OriginalClip: {fileID: -203655887218126122, guid: 76f3aedf3209bdb4289bc0a8abdd6b87, type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: f2ba7917c7ddac7438cbe2542789d3d0, type: 3}

@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6438183599728799809
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5724140133974811825}
+  - component: {fileID: 6000684588228739654}
+  - component: {fileID: 4931275340357683547}
+  - component: {fileID: 7043391734879257140}
+  m_Layer: 0
+  m_Name: EmotionSystems
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5724140133974811825
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6438183599728799809}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6000684588228739654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6438183599728799809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15253b317e09a4d4ea0ed8f5b7a15db9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  transitionSpeed: 1
+  idle: {fileID: 11400000, guid: df9a63ec3581a4ab8a4f73433839e9c4, type: 2}
+  happy: {fileID: 11400000, guid: cf07cddcf0d214768a846c95350b5ba8, type: 2}
+  sad: {fileID: 11400000, guid: 4b24e17fcdb9042b2a12531d29d0f811, type: 2}
+--- !u!114 &4931275340357683547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6438183599728799809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b3908eca48794a058ca0eedcc9b0a9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationSwitcher: {fileID: 7043391734879257140}
+  idle: {fileID: -203655887218126122, guid: a126eacde407ec84fbe1d1d5fe94d2bb, type: 3}
+  happy: {fileID: -203655887218126122, guid: fd80a4e15b78c45498e604dbf2084b34, type: 3}
+  cry: {fileID: -203655887218126122, guid: 0ab16be3c05f58f41995516e14bea0f0, type: 3}
+--- !u!114 &7043391734879257140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6438183599728799809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 246c29a4afd1b487aa085bde77bf488a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Animator: {fileID: 0}
+  IdleAnimation: {fileID: -203655887218126122, guid: a126eacde407ec84fbe1d1d5fe94d2bb, type: 3}

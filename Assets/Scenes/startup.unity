@@ -207,7 +207,7 @@ MonoBehaviour:
       - m_Target: {fileID: 1024924804}
         m_TargetAssemblyTypeName: AvatarSDK.MetaPerson.MobileIntegrationSample.MobileUnitySampleHandler,
           Assembly-CSharp
-        m_MethodName: OnExitButtonClick
+        m_MethodName: OnClose
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -379,7 +379,7 @@ MonoBehaviour:
       - m_Target: {fileID: 1024924804}
         m_TargetAssemblyTypeName: AvatarSDK.MetaPerson.MobileIntegrationSample.MobileUnitySampleHandler,
           Assembly-CSharp
-        m_MethodName: OnProceedButtonClick
+        m_MethodName: OnProceedClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -550,7 +550,7 @@ GameObject:
   - component: {fileID: 241098917}
   - component: {fileID: 241098916}
   m_Layer: 5
-  m_Name: StartPopUpBox
+  m_Name: StartPopup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -705,7 +705,7 @@ MonoBehaviour:
       - m_Target: {fileID: 1024924804}
         m_TargetAssemblyTypeName: AvatarSDK.MetaPerson.MobileIntegrationSample.MobileUnitySampleHandler,
           Assembly-CSharp
-        m_MethodName: OnCreateAvatarButtonClick
+        m_MethodName: OnCreateAvatarClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1036,7 +1036,7 @@ MonoBehaviour:
       - m_Target: {fileID: 1024924804}
         m_TargetAssemblyTypeName: AvatarSDK.MetaPerson.MobileIntegrationSample.MobileUnitySampleHandler,
           Assembly-CSharp
-        m_MethodName: OnExitButtonClick
+        m_MethodName: OnClose
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2225,7 +2225,7 @@ MonoBehaviour:
   overlayBackground: {fileID: 638720871}
   startPopup: {fileID: 241098913}
   startButton: {fileID: 1943738052}
-  shareCodeInputField: {fileID: 437876974}
+  shareCodeInput: {fileID: 437876974}
 --- !u!114 &1024924805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3571,7 +3571,7 @@ GameObject:
   - component: {fileID: 1914232654}
   - component: {fileID: 1914232653}
   m_Layer: 5
-  m_Name: CreatePopUpBox
+  m_Name: CreatePopup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3724,7 +3724,7 @@ MonoBehaviour:
       - m_Target: {fileID: 1024924804}
         m_TargetAssemblyTypeName: AvatarSDK.MetaPerson.MobileIntegrationSample.MobileUnitySampleHandler,
           Assembly-CSharp
-        m_MethodName: OnLoadAvatarWithShareCode
+        m_MethodName: LoadAvatarWithShareCode
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4128,7 +4128,7 @@ MonoBehaviour:
       - m_Target: {fileID: 1024924804}
         m_TargetAssemblyTypeName: AvatarSDK.MetaPerson.MobileIntegrationSample.MobileUnitySampleHandler,
           Assembly-CSharp
-        m_MethodName: OnStartButtonClick
+        m_MethodName: OnStartClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
