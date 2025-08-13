@@ -182,6 +182,17 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
             SceneManager.LoadScene("AvatarLoader");
         }
 
+        // --- DEBUGGING: reset checklist date ---
+        void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                PlayerPrefs.DeleteKey("LastChecklistDate");
+                PlayerPrefs.Save();
+                Debug.LogWarning("--- PlayerPrefs 'LastChecklistDate' RESET ---");
+            }
+        }
+
         private void OnPageFinished(UniWebView webView, int statusCode, string url)
         {
             string javaScriptCode = @"

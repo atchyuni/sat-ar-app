@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using AvatarSDK.MetaPerson.Loader;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(ARRaycastManager))]
 public class ARAvatarHandler : MonoBehaviour
@@ -14,8 +15,8 @@ public class ARAvatarHandler : MonoBehaviour
     [Header("UI")]
     [SerializeField] private GameObject loadingPanel;
     [SerializeField] private GameObject instructionBox;
-    public GameObject controlButton;
-    public GameObject customControls;
+    public GameObject emotionButton;
+    public GameObject emotionControls;
 
     [SerializeField] private ARPlaneManager arPlaneManager;
     private ARRaycastManager arRaycastManager;
@@ -44,6 +45,13 @@ public class ARAvatarHandler : MonoBehaviour
 
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
         {
+            // --- UI TAP CHECK ---
+            if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
+            {
+                Debug.Log("[ARAvatarHandler] ignoring ui tap for ar placement");
+                return;
+            }
+
             if (arRaycastManager.Raycast(Input.GetTouch(0).position, hits, TrackableType.PlaneWithinPolygon))
             {
                 var hitPose = hits[0].pose;
@@ -68,7 +76,7 @@ public class ARAvatarHandler : MonoBehaviour
         }
     }
 
-    public void HideInstructionBox()
+    public void HideInstructions()
     {
         if (instructionBox != null)
         {
@@ -76,12 +84,12 @@ public class ARAvatarHandler : MonoBehaviour
         }
     }
 
-    public void OnControlButtonClick()
+    public void OnEmotionClick()
     {
-        if (customControls != null)
+        if (emotionControls != null)
         {
-            customControls.SetActive(true);
-            controlButton.SetActive(false);
+            emotionControls.SetActive(true);
+            emotionButton.SetActive(false);
         }
     }
 
@@ -139,7 +147,7 @@ public class ARAvatarHandler : MonoBehaviour
         }
     }
 
-    // helper to toggle plane visuals
+    // --- TOGGLE PLANE VISUALS ---
     private void SetPlaneVisualsActive(bool isActive)
     {
         if (arPlaneManager == null) return;
