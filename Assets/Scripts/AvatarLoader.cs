@@ -4,6 +4,7 @@ using AvatarSDK.MetaPerson.Loader;
 using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using System;
 
 public class AvatarLoader : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class AvatarLoader : MonoBehaviour
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private ProgressBarUI progressBar;
     [SerializeField] private TMP_Text quoteText;
+    [SerializeField] private ChecklistManager checklistManager;
 
     [Header("Avatar Positioning")]
     [SerializeField] private Vector3 avatarWorldPosition = new Vector3(0, 0, 0);
@@ -22,7 +24,7 @@ public class AvatarLoader : MonoBehaviour
     public GameObject customControls;
     public GameObject tipBox;
     public GameObject controlButton;
-    
+
     private List<string> quotes = new List<string>
     {
         "Believe you can",
@@ -31,10 +33,9 @@ public class AvatarLoader : MonoBehaviour
         "You are doing great work",
     };
 
-    async void Start()
+    void Start()
     {
         // --- RETRIEVE DATA ---
-        string avatarUrl = AvatarManager.Instance.CurrentAvatarUrl;
         string avatarName = AvatarManager.Instance.CurrentAvatarName;
         int daysCompleted = AvatarManager.Instance.CurrentDaysCompleted;
 
@@ -51,34 +52,48 @@ public class AvatarLoader : MonoBehaviour
             progressBar.UpdateProgress(daysCompleted);
         }
 
-        // --- LOAD MODEL ---
-        if (metaPersonLoader == null || cameraControls == null)
-        {
-            Debug.LogError("ERROR: [MetaPersonLoader] or [CameraControls] not assigned");
-            return;
-        }
+        // --- WELLNESS CHECK ---
+        string todayDateString = DateTime.UtcNow.Date.ToString();
+        string lastChecklistDate = PlayerPrefs.GetString("LastChecklistDate", "");
 
-        if (!string.IsNullOrEmpty(avatarUrl))
+        if (lastChecklistDate != todayDateString)
         {
-            Debug.Log($"[AvatarLoader] from [AvatarManager]: {avatarUrl}");
-            bool isLoaded = await metaPersonLoader.LoadModelAsync(avatarUrl);
-
-            if (isLoaded)
+            Debug.Log("[AvatarLoader] pending wellness check");
+            
+            checklistManager.ShowChecklist(() =>
             {
-                Transform avatarRoot = metaPersonLoader.transform;
-
-                // avatarRoot.position = avatarWorldPosition;
-                avatarRoot.rotation = Quaternion.Euler(0, 180, 0);
-
-                cameraControls.transform.position = avatarRoot.position + cameraOffset;
-                cameraControls.transform.LookAt(avatarRoot);
-
-                cameraControls.target = avatarRoot;
-            }
+                PlayerPrefs.SetString("LastChecklistDate", todayDateString);
+                PlayerPrefs.Save();
+                LoadAvatarModel(); // only after checklist success
+            });
         }
         else
         {
+            Debug.Log("[AvatarLoader] wellness check already completed");
+            LoadAvatarModel();
+        }
+    }
+
+    private async void LoadAvatarModel()
+    {
+        string avatarUrl = AvatarManager.Instance.CurrentAvatarUrl;
+
+        if (string.IsNullOrEmpty(avatarUrl))
+        {
             Debug.LogWarning("[AvatarManager] missing url");
+            return;
+        }
+
+        Debug.Log($"[LoadAvatarModel]: {avatarUrl}");
+        bool isLoaded = await metaPersonLoader.LoadModelAsync(avatarUrl);
+
+        if (isLoaded)
+        {
+            Transform avatarRoot = metaPersonLoader.transform;
+            avatarRoot.rotation = Quaternion.Euler(0, 180, 0);
+            cameraControls.transform.position = avatarRoot.position + cameraOffset;
+            cameraControls.transform.LookAt(avatarRoot);
+            cameraControls.target = avatarRoot;
         }
     }
 
@@ -86,7 +101,7 @@ public class AvatarLoader : MonoBehaviour
     {
         if (quoteText != null && quotes.Count > 0)
         {
-            int randomIndex = Random.Range(0, quotes.Count);            
+            int randomIndex = UnityEngine.Random.Range(0, quotes.Count);
             quoteText.text = $"[ {quotes[randomIndex]} ]";
         }
     }

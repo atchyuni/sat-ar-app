@@ -54,7 +54,7 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
         public GameObject startPopup;
         public Button startButton;
         public TMP_InputField shareCodeInputField;
-
+        
         private void Start()
         {
             if (credentials.IsEmpty())
@@ -150,36 +150,36 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
             progressText.text = "Status: Finding avatar...";
 
             var avatarData = await DBManager.Instance.GetAvatarByShareCode(shareCode);
-
+            
             if (avatarData != null)
             {
-                // --- PROGRESS CHECK ---
-                DateTime today = DateTime.UtcNow;
-                DateTime lastLogged = DateTime.Parse(avatarData.last_logged, null, System.Globalization.DateTimeStyles.RoundtripKind);
+                // --- DAILY PROGRESS CHECK ---
+                DateTime todayLocal = DateTime.Now;
+                DateTime lastLoggedUtc = DateTime.Parse(avatarData.last_logged, null, System.Globalization.DateTimeStyles.RoundtripKind);
+                DateTime lastLoggedLocal = lastLoggedUtc.ToLocalTime();
 
-                if (today.Date > lastLogged.Date)
+                if (todayLocal.Date > lastLoggedLocal.Date)
                 {
                     Debug.Log("[Login] new day detected, incrementing days_completed");
                     int newDaysCompleted = avatarData.days_completed + 1;
-
-                    // db update
-                    await DBManager.Instance.UpdateAvatarProgress(shareCode, newDaysCompleted, today);
-
+                    await DBManager.Instance.UpdateAvatarProgress(shareCode, newDaysCompleted, DateTime.UtcNow);
                     avatarData.days_completed = newDaysCompleted;
                 }
-                else
-                {
-                    Debug.Log("[Login] no change to days_completed");
-                }
 
-                AvatarManager.Instance.SetCurrentAvatar(avatarData.url, avatarData.name, avatarData.days_completed);
-                UnityEngine.SceneManagement.SceneManager.LoadScene("AvatarLoader");
+                // pass data to manager
+                ProceedToAvatarLoader(avatarData);
             }
             else
             {
                 Debug.LogError($"[DB] no avatar found with: {shareCode}");
                 progressText.text = "Error: Invalid share code";
             }
+        }
+
+        private void ProceedToAvatarLoader(DBManager.AvatarData avatarData)
+        {
+            AvatarManager.Instance.SetCurrentAvatar(avatarData.url, avatarData.name, avatarData.days_completed);            
+            SceneManager.LoadScene("AvatarLoader");
         }
 
         private void OnPageFinished(UniWebView webView, int statusCode, string url)
