@@ -17,6 +17,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Exercise1.unity
     guid: 1371088791c054b249e44e93b8937870
+  - enabled: 1
+    path: Assets/Scenes/Exercise15.unity
+    guid: ea3abeff5e15646b98afaa7d8b3ecb41
   m_configObjects:
     UnityEditor.XR.ARKit.ARKitSettings: {fileID: 11400000, guid: 33eb8ebe7ddde47f08eaeb0a368075af, type: 2}
     com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: 32593157289284ae79b555033fd826be, type: 2}
