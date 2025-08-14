@@ -37,6 +37,7 @@ public class ARAvatarHandler : MonoBehaviour
     [SerializeField] private ARPlaneManager arPlaneManager;
     private ARRaycastManager arRaycastManager;
     private static List<ARRaycastHit> hits = new List<ARRaycastHit>();
+    [SerializeField] private ARScaleController scaleController;
     private bool initialised = false;
 
     void Awake()
@@ -49,11 +50,6 @@ public class ARAvatarHandler : MonoBehaviour
 
     void Update()
     {
-        if (instructionBox != null && instructionBox.activeInHierarchy)
-        {
-            return;
-        }
-
         if (placedAvatarInstance == null)
         {
             UpdatePlacementIndicator();
@@ -135,6 +131,11 @@ public class ARAvatarHandler : MonoBehaviour
                 placedAvatarInstance.transform.position = placementPose.position;
                 placedAvatarInstance.transform.rotation = placementPose.rotation;
                 placedAvatarInstance.transform.Rotate(0, 180, 0);
+
+                if (scaleController != null)
+                {
+                    scaleController.targetTransform = placedAvatarInstance.transform;
+                }
 
                 Animator animator = placedAvatarInstance.GetComponentInChildren<Animator>();
                 if (animator != null)

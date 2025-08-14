@@ -150,7 +150,7 @@ public class AvatarLoader : MonoBehaviour
         if (quoteText != null && quotes.Count > 0)
         {
             int randomIndex = UnityEngine.Random.Range(0, quotes.Count);
-            quoteText.text = $"[ {quotes[randomIndex]} ]";
+            quoteText.text = $"{quotes[randomIndex]}";
         }
     }
 
