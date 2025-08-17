@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class AvatarDisplay : MonoBehaviour
 {
-
     public MetaPersonLoader avatarLoader;
 
     [Header("Expression Systems")]
