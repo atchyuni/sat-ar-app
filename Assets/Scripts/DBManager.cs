@@ -8,10 +8,8 @@ using System;
 public class DBManager : MonoBehaviour
 {
     public static DBManager Instance { get; private set; }
-
-    // --- SUPABASE CREDENTIALS ---
-    private string dbUrl = "https://yrnfgbeqrnltwogussiz.supabase.co";
-    private string dbAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlybmZnYmVxcm5sdHdvZ3Vzc2l6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzMTgzMDgsImV4cCI6MjA2OTg5NDMwOH0.IbeCfEmTrLa4SmXapDWXP6ipxp_njQpIsJc2nXLv6-k";
+    private string dbUrl;
+    private string dbAnonKey;
 
     [System.Serializable]
     public class AvatarData
@@ -47,6 +45,10 @@ public class DBManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        EnvLoader.LoadEnv();
+        dbUrl = EnvLoader.Get("SUPABASE_URL");
+        dbAnonKey = EnvLoader.Get("SUPABASE_ANON_KEY");
     }
 
     private string GenerateShareCode()

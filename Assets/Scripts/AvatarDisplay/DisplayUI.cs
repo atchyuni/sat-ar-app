@@ -16,7 +16,8 @@ public class DisplayUI : MonoBehaviour
     [SerializeField] private GameObject shareCodeDisplay;
     [SerializeField] private TMP_Text shareCodeText;
 
-    [SerializeField] private string serverUrl = "http://172.20.10.3:5000/process-avatar";
+    [SerializeField] private string serverUrl = "http://ec2-51-20-107-68.eu-north-1.compute.amazonaws.com:5000";
+    // [SerializeField] private string serverUrl = "http://10.74.130.118:5000"; // dev mode
     private bool avatarSaved = false;
     private bool popupShown = false;
 

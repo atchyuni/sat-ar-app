@@ -2238,8 +2238,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1b4fca8631625548b4e57a0b93efaea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clientId: JzdRxJ06WHH805xHgjt89j6wcMN1JQ1GzdPRhZIV
-  clientSecret: el6FK7cqsT03zJmlOFi9ugGHFaSqCcUGD92JlEJW668YdK4oW7CNNsZUoF67yhPX2YbSdvVqhq8u7KEHZNKr9Y43bWZr16fAL2ln7wRsmQJlOtILAsCxAMG4gIZpqNks
+  clientId: 
+  clientSecret: 
 --- !u!1 &1053618866
 GameObject:
   m_ObjectHideFlags: 0

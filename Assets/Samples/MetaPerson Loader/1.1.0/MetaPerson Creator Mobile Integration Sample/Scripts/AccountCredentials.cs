@@ -17,8 +17,15 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
 	public class AccountCredentials : MonoBehaviour
 	{
 		public string clientId;
-
 		public string clientSecret;
+
+		private void Awake()
+		{
+			EnvLoader.LoadEnv();
+
+			clientId = EnvLoader.Get("METAPERSON_CLIENT_ID");
+			clientSecret = EnvLoader.Get("METAPERSON_CLIENT_SECRET");
+		}
 
 		public bool IsEmpty()
 		{
