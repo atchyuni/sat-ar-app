@@ -10,8 +10,10 @@ using UnityEngine.UI;
 
 public class AvatarLoader : MonoBehaviour
 {
-    [Header("Scene References")]
     [SerializeField] private MetaPersonLoader avatarLoader;
+    [SerializeField] private Vector3 avatarPosition;
+
+    [Header("Scene References")]
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private ProgressBarUI progressBar;
     [SerializeField] private TMP_Text quoteText;
@@ -32,15 +34,16 @@ public class AvatarLoader : MonoBehaviour
     public GameObject emotionControls;
     public GameObject tipBox;
     public GameObject emotionButton;
+    public GameObject arrow;
 
     private bool initialised = false;
 
     private List<string> quotes = new List<string>
     {
-        "Believe you can",
-        "You can do this",
-        "Every small step counts",
-        "You are doing great work",
+        "Believe you can!",
+        "You can do this!",
+        "Every small step counts!",
+        "You are doing great work!",
     };
 
     void Start()
@@ -95,7 +98,7 @@ public class AvatarLoader : MonoBehaviour
         }
 
         // --- LOAD MODEL ---
-        Debug.Log($"[LoadAvatarModel] with: {avatar_url}");
+        Debug.Log($"[AvatarLoader] with: {avatar_url}");
         bool loaded = await avatarLoader.LoadModelAsync(avatar_url);
 
         if (loaded && avatarLoader.transform.childCount > 0)
@@ -113,7 +116,7 @@ public class AvatarLoader : MonoBehaviour
             }
             else
             {
-                Debug.LogError("[AvatarLoader] animator not found on loaded avatar");
+                Debug.LogError("[AvatarLoader-Error] animator not found on loaded avatar");
             }
             
             facialSwitcher.Avatar = avatar;
@@ -123,6 +126,23 @@ public class AvatarLoader : MonoBehaviour
             SetIdleBody();
             initialised = true;
             Debug.Log("[AvatarLoader] systems initialised successfully");
+        }
+    }
+
+    void LateUpdate()
+    {
+        if (initialised)
+        {
+            UpdateAvatarPosition();
+        }
+    }
+
+    private void UpdateAvatarPosition()
+    {
+        if (avatarLoader.transform.childCount > 0)
+        {
+            GameObject avatar = avatarLoader.transform.GetChild(0).gameObject;
+            avatar.transform.position = avatarPosition;
         }
     }
 
@@ -166,6 +186,7 @@ public class AvatarLoader : MonoBehaviour
             emotionControls.SetActive(true);
             emotionButton.SetActive(false);
             tipBox.SetActive(false);
+            arrow.SetActive(false);
         }
     }
 }

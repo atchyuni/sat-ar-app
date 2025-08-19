@@ -65,3 +65,4 @@ Thumbs.db
 .idea/
 *.meta
 /Assets/Resources/Secrets.asset
+**/Secrets.asset

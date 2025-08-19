@@ -7,7 +7,7 @@ public class SceneNavigationHandler : MonoBehaviour
     {
         if (string.IsNullOrEmpty(sceneName))
         {
-            Debug.LogError("ERROR: [NavigationHandler] empty scene name");
+            Debug.LogError("[SceneNavigation-Error] empty scene name");
             return;
         }
 
