@@ -18,12 +18,18 @@ public class ARAvatarHandler : MonoBehaviour
     [Header("UI References")]
     [SerializeField] private GameObject loadingPanel;
     [SerializeField] private GameObject instructionBox;
+    [SerializeField] private GameObject menuButton;
+    [SerializeField] private GameObject menuPanel;
+    [SerializeField] private GameObject lockButton;
     [SerializeField] private GameObject debriefPopup;
     [SerializeField] private GameObject backgroundOverlay;
     [SerializeField] private Toggle happyFace;
     [SerializeField] private Toggle sadFace;
     [SerializeField] private Toggle happyBody;
     [SerializeField] private Toggle sadBody;
+    public Sprite lockedSprite;
+    public Sprite unlockedSprite;
+    public Image lockButtonImage;
 
     [Header("Emotion Controls")]
     [SerializeField] private GameObject emotionButton;
@@ -39,6 +45,7 @@ public class ARAvatarHandler : MonoBehaviour
     private static List<ARRaycastHit> hits = new List<ARRaycastHit>();
     [SerializeField] private ARScaleController scaleController;
     private bool initialised = false;
+    private bool locked = false;
 
     void Awake()
     {
@@ -46,6 +53,9 @@ public class ARAvatarHandler : MonoBehaviour
         if (instructionBox != null) instructionBox.SetActive(true);
         if (placementIndicator != null) placementIndicator.SetActive(false);
         if (loadingPanel != null) loadingPanel.SetActive(false);
+        if (menuButton != null) menuButton.SetActive(false);
+        if (menuPanel != null) menuPanel.SetActive(false);
+        if (lockButton != null) lockButton.SetActive(false);
     }
 
     void Update()
@@ -55,12 +65,13 @@ public class ARAvatarHandler : MonoBehaviour
             UpdatePlacementIndicator();
         }
 
-        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+        // only allow repositioning if avatar not locked
+        if (!locked && Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
         {
             // --- UI TAP CHECK ---
             if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
             {
-                Debug.Log("[ARAvatarHandler] tap not for placement");
+                Debug.Log("[ARHandler] tap not for placement");
                 return;
             }
 
@@ -88,11 +99,49 @@ public class ARAvatarHandler : MonoBehaviour
         }
     }
 
+    public void ToggleLock()
+    {
+        locked = !locked;
+
+        if (lockButtonImage != null)
+        {
+            if (locked)
+            {
+                lockButtonImage.sprite = lockedSprite;
+            }
+            else
+            {
+                lockButtonImage.sprite = unlockedSprite;
+            }
+        }
+        Debug.Log($"[ARHandler] avatar position locked: {locked}");
+    }
+
     public void HideInstructions()
     {
         if (instructionBox != null)
         {
             instructionBox.SetActive(false);
+            menuButton.SetActive(true);
+            lockButton.SetActive(true);
+        }
+    }
+
+    public void OnMenuClick()
+    {
+        if (menuPanel != null)
+        {
+            menuPanel.SetActive(true);
+            menuButton.SetActive(false);
+        }
+    }
+
+    public void OnMenuClose()
+    {
+        if (menuButton != null)
+        {
+            menuButton.SetActive(true);
+            menuPanel.SetActive(false);
         }
     }
 
@@ -115,12 +164,14 @@ public class ARAvatarHandler : MonoBehaviour
         }
 
         placementIndicator.SetActive(false);
+        GameObject indicator_to_destroy = placementIndicator;
+        placementIndicator = null;
 
         try
         {
             if (loadingPanel != null) loadingPanel.SetActive(true);
 
-            Debug.Log($"[ARAvatarHandler] loading with: {avatar_url}");
+            Debug.Log($"[ARHandler] loading with: {avatar_url}");
             bool loaded = await avatarLoader.LoadModelAsync(avatar_url);
             if (loaded && avatarLoader.transform.childCount > 0)
             {
@@ -146,16 +197,16 @@ public class ARAvatarHandler : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogError("[ARAvatarHandler] animator not found on loaded avatar");
+                    Debug.LogError("[ARHandler] animator not found on loaded avatar");
                 }
-                
-                facialSwitcher.Avatar = placedAvatarInstance;                
+
+                facialSwitcher.Avatar = placedAvatarInstance;
                 animator.gameObject.AddComponent<AnimEventReceiver>().ans = animationManager.animationSwitcher;
 
                 SetIdleFace();
                 SetIdleBody();
                 initialised = true;
-                Debug.Log("[ARAvatarHandler] systems initialised successfully");
+                Debug.Log("[ARHandler] systems initialised successfully");
 
                 SetPlaneVisualsActive(false);
             }
@@ -163,6 +214,7 @@ public class ARAvatarHandler : MonoBehaviour
         finally
         {
             if (loadingPanel != null) loadingPanel.SetActive(false);
+            if (indicator_to_destroy != null) Destroy(indicator_to_destroy);
         }
     }
 
@@ -191,6 +243,8 @@ public class ARAvatarHandler : MonoBehaviour
         {
             if (emotionControls != null) emotionControls.SetActive(false);
             if (emotionButton != null) emotionButton.SetActive(false);
+            if (menuPanel != null) menuPanel.SetActive(false);
+            if (menuButton != null) menuButton.SetActive(false);
 
             debriefPopup.SetActive(true);
             backgroundOverlay.SetActive(true);
