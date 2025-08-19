@@ -21,10 +21,18 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
 
 		private void Awake()
 		{
-			EnvLoader.LoadEnv();
+			Secrets secrets = Resources.Load<Secrets>("Secrets");
 
-			clientId = EnvLoader.Get("METAPERSON_CLIENT_ID");
-			clientSecret = EnvLoader.Get("METAPERSON_CLIENT_SECRET");
+			if (secrets != null)
+			{
+				clientId = secrets.metapersonClientId;
+				clientSecret = secrets.metapersonClientSecret;
+			}
+			else
+			{
+				Debug.LogError("[AccountCredentials-Error] secrets asset not found");
+			}
+
 		}
 
 		public bool IsEmpty()

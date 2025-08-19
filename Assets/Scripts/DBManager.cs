@@ -46,9 +46,17 @@ public class DBManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        EnvLoader.LoadEnv();
-        dbUrl = EnvLoader.Get("SUPABASE_URL");
-        dbAnonKey = EnvLoader.Get("SUPABASE_ANON_KEY");
+        Secrets secrets = Resources.Load<Secrets>("Secrets");
+
+        if (secrets != null)
+        {
+            dbUrl = secrets.supabaseUrl;
+            dbAnonKey = secrets.supabaseAnonKey;
+        }
+        else
+        {
+            Debug.LogError("[DB-Error] secrets asset not found");
+        }
     }
 
     private string GenerateShareCode()
@@ -77,7 +85,7 @@ public class DBManager : MonoBehaviour
             if (success) return generatedCode;
         }
 
-        Debug.LogError($"[DBManager] failed to save avatar after {maxRetries} attempts");
+        Debug.LogError($"[DBManager-Error] failed to save avatar after {maxRetries} attempts");
         return null;
     }
 
@@ -118,7 +126,7 @@ public class DBManager : MonoBehaviour
             
             if (request.responseCode != 204) // PATCH success
             {
-                Debug.LogError($"ERROR: [DBManager] {request.error} | {request.downloadHandler.text}");
+                Debug.LogError($"[DBManager-Error] {request.error} | {request.downloadHandler.text}");
             }
             callback(request.responseCode == 204);
         }

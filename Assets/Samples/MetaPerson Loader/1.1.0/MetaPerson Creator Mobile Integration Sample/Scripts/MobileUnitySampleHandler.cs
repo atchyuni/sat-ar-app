@@ -141,12 +141,12 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
 
             if (string.IsNullOrWhiteSpace(shareCode))
             {
-                Debug.LogWarning("[LoadAvatarWithShareCode] missing input");
+                Debug.LogWarning("[LoadAvatar] missing input");
                 return;
             }
 
             Debug.Log($"[DB] searching for avatar with: {shareCode}...");
-            progressText.text = "Status: Finding avatar...";
+            progressText.text = "Status: Finding Avatar...";
 
             var avatarData = await DBManager.Instance.GetAvatarByShareCode(shareCode);
             
@@ -180,7 +180,7 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
             SceneManager.LoadScene("UserHome");
         }
 
-        // --- DEBUGGING: reset checklist date ---
+        // --- DEBUGGING: reset checklist ---
         void Update()
         {
             if (Input.GetKeyDown(KeyCode.R))
@@ -290,7 +290,7 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError("ERROR: [Server] " + e.Message);
+                    Debug.LogError("[Server-Error] " + e.Message);
                     progressText.text = "Status: Failed to modify Avatar";
                     getAvatarButton.interactable = true;
                     return;

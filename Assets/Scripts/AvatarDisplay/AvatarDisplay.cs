@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class AvatarDisplay : MonoBehaviour
 {
     public MetaPersonLoader avatarLoader;
+    [SerializeField] private Vector3 avatarPosition;
 
     [Header("Expression Systems")]
     public RuntimeAnimatorController controller;
@@ -20,7 +21,6 @@ public class AvatarDisplay : MonoBehaviour
     [SerializeField] private Toggle sadBody;
 
     private bool initialised = false;
-
 
     async void Start()
     {
@@ -70,6 +70,23 @@ public class AvatarDisplay : MonoBehaviour
         else
         {
             Debug.LogWarning("[AvatarManager] missing avatar url");
+        }
+    }
+
+    void LateUpdate()
+    {
+        if (initialised)
+        {
+            UpdateAvatarPosition();
+        }
+    }
+
+    private void UpdateAvatarPosition()
+    {
+        if (avatarLoader.transform.childCount > 0)
+        {
+            GameObject avatar = avatarLoader.transform.GetChild(0).gameObject;
+            avatar.transform.position = avatarPosition;
         }
     }
     

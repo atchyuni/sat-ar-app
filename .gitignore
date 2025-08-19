@@ -64,3 +64,4 @@ Thumbs.db
 /[Aa]ssets/AssetStoreTools*
 .idea/
 *.meta
+/Assets/Resources/Secrets.asset

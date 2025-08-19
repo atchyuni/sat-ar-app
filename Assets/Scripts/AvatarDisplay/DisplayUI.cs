@@ -72,7 +72,7 @@ public class DisplayUI : MonoBehaviour
 
         if (DBManager.Instance == null)
         {
-            Debug.LogError("ERROR: [DB] not found");
+            Debug.LogError("[DB-Error] null instance");
             return;
         }
 
@@ -85,7 +85,7 @@ public class DisplayUI : MonoBehaviour
         {
             avatarSaved = true;
 
-            string confirmation = $"Your unique code for '<b>{avatar_name}</b>' is: <b>{share_code}</b>.\n\nPlease save it in a secure place so you can load your avatar in the future.";
+            string confirmation = $"Your unique code for '<b>{avatar_name}</b>' is: <b>{share_code}</b>. Please save it in a secure place so you can load your avatar in the future.";
             shareCodeText.text = confirmation;
             shareCodeDisplay.SetActive(true);
         }
@@ -114,25 +114,25 @@ public class DisplayUI : MonoBehaviour
     {
         if (avatarSaved)
         {
-            Debug.Log("CleanupAvatar(): skipping for saved avatar");
+            Debug.Log("[CleanupAvatar] skipping for saved avatar");
             yield break;
         }
 
         string current_url = AvatarManager.Instance.CurrentAvatarUrl;
         if (string.IsNullOrEmpty(current_url))
         {
-            Debug.Log("CleanupAvatar(): no url to clean");
+            Debug.Log("[CleanupAvatar] no url to clean");
             yield break;
         }
 
         string filename = ExtractFilename(current_url);
         if (string.IsNullOrEmpty(filename))
         {
-            Debug.LogWarning("CleanupAvatar(): could not extract filename to clean");
+            Debug.LogWarning("[CleanupAvatar] could not extract filename to clean");
             yield break;
         }
 
-        Debug.Log($"CleanupAvatar(): {filename}");
+        Debug.Log($"[CleanupAvatar] {filename}");
         yield return StartCoroutine(DeleteAvatarFile(filename));
     }
 
@@ -149,7 +149,6 @@ public class DisplayUI : MonoBehaviour
 
         try
         {
-            // Assuming URL format: http://localhost:5000/files/filename.glb
             int last_index = url.LastIndexOf('/');
             if (last_index >= 0 && last_index < url.Length - 1)
             {
@@ -158,7 +157,7 @@ public class DisplayUI : MonoBehaviour
         }
         catch (System.Exception e)
         {
-            Debug.LogWarning($"ExtractFilename(): {e.Message}");
+            Debug.LogWarning($"[ExtractFilename] {e.Message}");
         }
 
         return null;

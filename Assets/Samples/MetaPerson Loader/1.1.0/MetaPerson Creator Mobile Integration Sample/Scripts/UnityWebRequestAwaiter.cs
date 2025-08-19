@@ -2,7 +2,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using UnityEngine.Networking;
 
-// helper method to make unitywebrequest awaitable
+// helper to make awaitable
 public static class UnityWebRequestAwaiter
 {
     public static TaskAwaiter GetAwaiter(this UnityWebRequestAsyncOperation asyncOp)

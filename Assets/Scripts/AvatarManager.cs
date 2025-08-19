@@ -35,7 +35,7 @@ public class AvatarManager : MonoBehaviour
         CurrentAvatarUrl = avatarUrl;
         CurrentAvatarName = avatarName;
         CurrentDaysCompleted = daysCompleted;
-        Debug.Log($"[AvatarManager] SetCurrentAvatar called with: {avatarUrl}");
+        Debug.Log($"[AvatarManager] SetCurrentAvatar() with: {avatarUrl}");
     }
     
     // overload for "create avatar" flow, which starts at 0 days
