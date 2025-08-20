@@ -1,15 +1,12 @@
 ## Self-Attachment Therapy in AR: Integrating MetaPerson Creator
 This Unity mobile application allows users to create and interact with their personalised "childhood" self as a 3D avatar. The project integrates:
 * MetaPerson Creator API (https://docs.metaperson.avatarsdk.com/)
-* Custom Flask server for model body proportion editing (using Blender), hosted on AWS (EC2)
+* Custom Flask server for avatar body proportion editing (using Blender), hosted on AWS (EC2)
 * Persistent cloud storage (Supabase PostgreSQL)
-* Gamification (progress bar) and intuitive UI/UX (HCI)
+* Gamification and intuitive UI/UX elements based on HCI principles
 
 ## Getting Started
-### Prerequisites:
-* Unity Hub
-* Unity Editor (Version 2022.3.62f1)
-* Xcode (iOS build) or Android Studio (Android)
+Prerequisites: Unity Hub and Editor (Version 2022.3.62f1), Xcode (iOS build) or Android Studio (Android)
 
 1. <b>Clone the Repository</b>
 2. <b>Backend Server Setup:</b>
@@ -24,7 +21,7 @@ python server.py
 * Go to File -> Build Settings and ensure all scenes are added
 * Update server_api in MobileUnitySampleHandler.cs to http://localhost:5000/process-avatar
 * Update serverUrl in DisplayUI.cs to http://localhost:5000
-* Store MetaPerson client ID and secret and Supabase url and anon key as Secrets asset under Resources folder
+* Store MetaPerson client ID and secret and Supabase url and anon key as Secrets under Resources/
 * Build and run project on target device
 
 ## Project Structure
