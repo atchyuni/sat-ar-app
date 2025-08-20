@@ -13,7 +13,7 @@ public class ARAvatarHandler : MonoBehaviour
     [Header("Avatar Components")]
     [SerializeField] private MetaPersonLoader avatarLoader;
     [SerializeField] private GameObject placementIndicator;
-    private GameObject placedAvatarInstance;
+    private GameObject placedAvatar;
 
     [Header("UI References")]
     [SerializeField] private GameObject loadingPanel;
@@ -60,7 +60,7 @@ public class ARAvatarHandler : MonoBehaviour
 
     void Update()
     {
-        if (placedAvatarInstance == null)
+        if (placedAvatar == null)
         {
             UpdatePlacementIndicator();
         }
@@ -79,7 +79,7 @@ public class ARAvatarHandler : MonoBehaviour
             {
                 var hitPose = hits[0].pose;
 
-                if (placedAvatarInstance == null)
+                if (placedAvatar == null)
                 {
                     PlaceAvatarAsync(hitPose);
                 }
@@ -87,13 +87,13 @@ public class ARAvatarHandler : MonoBehaviour
                 {
                     // --- REPOSITIONING (RAYCAST) ---
                     // 1. set new position
-                    placedAvatarInstance.transform.position = hitPose.position;
+                    placedAvatar.transform.position = hitPose.position;
 
                     // 2. rotate to face camera (horizontally)
                     Vector3 cameraPosition = Camera.main.transform.position;
-                    Vector3 directionToCamera = cameraPosition - placedAvatarInstance.transform.position;
+                    Vector3 directionToCamera = cameraPosition - placedAvatar.transform.position;
                     directionToCamera.y = 0;
-                    placedAvatarInstance.transform.rotation = Quaternion.LookRotation(directionToCamera);
+                    placedAvatar.transform.rotation = Quaternion.LookRotation(directionToCamera);
                 }
             }
         }
@@ -176,19 +176,19 @@ public class ARAvatarHandler : MonoBehaviour
             if (loaded && avatarLoader.transform.childCount > 0)
             {
                 GameObject avatar = avatarLoader.transform.GetChild(0).gameObject;
-                placedAvatarInstance = Instantiate(avatar);
+                placedAvatar = Instantiate(avatar);
                 avatar.SetActive(false);
 
-                placedAvatarInstance.transform.position = placementPose.position;
-                placedAvatarInstance.transform.rotation = placementPose.rotation;
-                placedAvatarInstance.transform.Rotate(0, 180, 0);
+                placedAvatar.transform.position = placementPose.position;
+                placedAvatar.transform.rotation = placementPose.rotation;
+                placedAvatar.transform.Rotate(0, 180, 0);
 
                 if (scaleController != null)
                 {
-                    scaleController.targetTransform = placedAvatarInstance.transform;
+                    scaleController.targetTransform = placedAvatar.transform;
                 }
 
-                Animator animator = placedAvatarInstance.GetComponentInChildren<Animator>();
+                Animator animator = placedAvatar.GetComponentInChildren<Animator>();
                 if (animator != null)
                 {
                     animator.runtimeAnimatorController = controller;
@@ -200,7 +200,7 @@ public class ARAvatarHandler : MonoBehaviour
                     Debug.LogError("[ARHandler] animator not found on loaded avatar");
                 }
 
-                facialSwitcher.Avatar = placedAvatarInstance;
+                facialSwitcher.Avatar = placedAvatar;
                 animator.gameObject.AddComponent<AnimEventReceiver>().ans = animationManager.animationSwitcher;
 
                 SetIdleFace();
@@ -245,6 +245,7 @@ public class ARAvatarHandler : MonoBehaviour
             if (emotionButton != null) emotionButton.SetActive(false);
             if (menuPanel != null) menuPanel.SetActive(false);
             if (menuButton != null) menuButton.SetActive(false);
+            if (lockButton != null) lockButton.SetActive(false);
 
             debriefPopup.SetActive(true);
             backgroundOverlay.SetActive(true);
