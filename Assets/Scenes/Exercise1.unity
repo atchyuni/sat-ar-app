@@ -607,7 +607,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 160}
+  m_AnchoredPosition: {x: 0, y: 120}
   m_SizeDelta: {x: 800, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &494205368
@@ -630,9 +630,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Look for a quiet place to interact with your avatar. Use the emotion button
-    to toggle between happy and sad states while recalling positive and negative
-    childhood memories accordingly.
+  m_text: '1. Find a quiet place.
+
+    2. Recall a happy or sad childhood memory.
+
+    3.
+    Use the emotion controls to match your avatar''s mood to your memory.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1276,7 +1279,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -40}
+  m_AnchoredPosition: {x: 0, y: -30}
   m_SizeDelta: {x: 800, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &988383198
@@ -1299,14 +1302,17 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '<b>How to Place Your Avatar:</b> Move your phone to scan your environment
-    for the floor. Follow the placement guide and tap to place your avatar. Lock
-    to hold the position.
+  m_text: 'Scan your environment for the floor. Follow the visual guide and <b>tap</b>
+    to place your avatar. Lock to hold the position.
 
 
-    Look for a quiet place to interact with your avatar.
-    Use the emotion button to toggle between happy and sad states while recalling
-    positive and negative childhood memories accordingly.'
+    1. Find a quiet place.
+
+    2.
+    Recall a happy or sad childhood memory.
+
+    3. Use the emotion controls to match
+    your avatar''s mood to your memory.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1423,8 +1429,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 60, y: -59.999996}
-  m_SizeDelta: {x: 900, y: 800}
+  m_AnchoredPosition: {x: 60, y: -60}
+  m_SizeDelta: {x: 900, y: 700}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1053581172
 MonoBehaviour:
@@ -2756,7 +2762,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -160}
+  m_AnchoredPosition: {x: 0, y: -140}
   m_SizeDelta: {x: 800, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1692285423
@@ -2779,8 +2785,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <b>Tap to Reposition Avatar:</b> Click the lock/unlock button to hold the
-    current position.
+  m_text: <b>Tap to Reposition:</b> Click the lock/unlock button to hold the current
+    position.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
