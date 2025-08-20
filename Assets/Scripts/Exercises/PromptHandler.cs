@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using GLTFast;
 
 public class PromptHandler : MonoBehaviour
 {
@@ -40,10 +41,26 @@ public class PromptHandler : MonoBehaviour
 
     void Awake()
     {
+        CleanupRogues();
+
         if (instructionBox != null) instructionBox.SetActive(true);
         if (backgroundOverlay != null) backgroundOverlay.SetActive(true);
         if (menuButton != null) menuButton.SetActive(false);
         if (menuPanel != null) menuPanel.SetActive(false);
+    }
+
+    private void CleanupRogues()
+    {
+        var avatars = FindObjectsOfType<TimeBudgetPerFrameDeferAgent>(true);
+
+        if (avatars.Length > 0)
+        {
+            Debug.LogWarning($"[PromptHandler] found {avatars.Length} rogue glTF model(s), destroying");
+            foreach (var avatarComponent in avatars)
+            {
+                Destroy(avatarComponent.gameObject);
+            }
+        }
     }
 
     public void HideInstructions()

@@ -103,6 +103,8 @@ public class ARAvatarHandler : MonoBehaviour
     {
         locked = !locked;
 
+        SetPlaneVisualsActive(!locked);
+
         if (lockButtonImage != null)
         {
             if (locked)
@@ -177,6 +179,8 @@ public class ARAvatarHandler : MonoBehaviour
             {
                 GameObject avatar = avatarLoader.transform.GetChild(0).gameObject;
                 placedAvatar = Instantiate(avatar);
+                placedAvatar.tag = "PlayerAvatar";
+                
                 avatar.SetActive(false);
 
                 placedAvatar.transform.position = placementPose.position;
