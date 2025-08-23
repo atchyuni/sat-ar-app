@@ -1,8 +1,8 @@
-using UnityEngine;
-using AvatarSDK.MetaPerson.Loader;
 using System.Threading.Tasks;
 using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
+using AvatarSDK.MetaPerson.Loader;
 
 public class AvatarDisplay : MonoBehaviour
 {
@@ -24,17 +24,14 @@ public class AvatarDisplay : MonoBehaviour
 
     async void Start()
     {
-        if (avatarLoader == null)
-        {
-            return;
-        }
+        if (avatarLoader == null) return;
 
         string avatar_url = AvatarManager.Instance.CurrentAvatarUrl;
 
         // --- LOAD MODEL ---
         if (!string.IsNullOrEmpty(avatar_url))
         {
-            Debug.Log("[AvatarDisplay] loading model from: " + avatar_url);
+            Debug.Log("[AvatarDisplay] loading from: " + avatar_url);
 
             bool loaded = await avatarLoader.LoadModelAsync(avatar_url);
 
@@ -75,10 +72,7 @@ public class AvatarDisplay : MonoBehaviour
 
     void LateUpdate()
     {
-        if (initialised)
-        {
-            UpdateAvatarPosition();
-        }
+        if (initialised) UpdateAvatarPosition();
     }
 
     private void UpdateAvatarPosition()

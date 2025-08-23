@@ -1,8 +1,8 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using TMPro;
-using System.Collections;
 using UnityEngine.Networking;
+using TMPro;
 
 public class DisplayUI : MonoBehaviour
 {
@@ -28,10 +28,7 @@ public class DisplayUI : MonoBehaviour
 
     private void Start()
     {
-        if (backgroundOverlay != null)
-        {
-            backgroundOverlay.SetActive(false);
-        }
+        if (backgroundOverlay != null) backgroundOverlay.SetActive(false);
         savePopup.SetActive(false);
         shareCodeDisplay.SetActive(false);
 
@@ -41,10 +38,7 @@ public class DisplayUI : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (popupShown && !avatarSaved)
-        {
-            StartCoroutine(CleanupAvatar());
-        }
+        if (popupShown && !avatarSaved) StartCoroutine(CleanupAvatar());
     }
 
     public void ShowSavePopup()
@@ -52,10 +46,7 @@ public class DisplayUI : MonoBehaviour
         nameInput.text = "";
         popupShown = true;
 
-        if (backgroundOverlay != null)
-        {
-            backgroundOverlay.SetActive(true);
-        }
+        if (backgroundOverlay != null) backgroundOverlay.SetActive(true);
         savePopup.SetActive(true);
     }
 
@@ -101,10 +92,7 @@ public class DisplayUI : MonoBehaviour
 
     public void OnCancelSave()
     {
-        if (backgroundOverlay != null)
-        {
-            backgroundOverlay.SetActive(false);
-        }
+        if (backgroundOverlay != null) backgroundOverlay.SetActive(false);
         savePopup.SetActive(false);
 
         StartCoroutine(CleanupAvatar());

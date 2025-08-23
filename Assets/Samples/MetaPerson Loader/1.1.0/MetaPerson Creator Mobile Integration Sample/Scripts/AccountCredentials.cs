@@ -30,7 +30,7 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
 			}
 			else
 			{
-				Debug.LogError("[AccountCredentials-Error] secrets asset not found");
+				Debug.LogError("[AccountCredentials-Error] secrets not found");
 			}
 
 		}

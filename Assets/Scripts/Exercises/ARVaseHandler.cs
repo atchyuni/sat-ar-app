@@ -3,22 +3,28 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(ARRaycastManager))]
 public class ARVaseHandler : MonoBehaviour
 {
-    [Header("UI")]
+    [Header("UI References")]
     [SerializeField] private GameObject instructionBox;
     [SerializeField] private GameObject menuButton;
     [SerializeField] private GameObject menuPanel;
     [SerializeField] private GameObject debriefPopup;
     [SerializeField] private GameObject backgroundOverlay;
+    [SerializeField] private GameObject endButton;
 
     void Awake()
     {
         if (instructionBox != null) instructionBox.SetActive(true);
-        if (menuButton != null) menuButton.SetActive(false);
+        if (backgroundOverlay != null) backgroundOverlay.SetActive(true);
+        if (menuButton != null) menuButton.SetActive(true);
+        menuButton.GetComponent<Button>().interactable = false;
         if (menuPanel != null) menuPanel.SetActive(false);
+        if (endButton != null) endButton.SetActive(true);
+        endButton.GetComponent<Button>().interactable = false;
     }
 
     public void HideInstructions()
@@ -26,7 +32,9 @@ public class ARVaseHandler : MonoBehaviour
         if (instructionBox != null)
         {
             instructionBox.SetActive(false);
-            menuButton.SetActive(true);
+            backgroundOverlay.SetActive(false);
+            menuButton.GetComponent<Button>().interactable = true;
+            endButton.GetComponent<Button>().interactable = true;
         }
     }
 
@@ -36,6 +44,7 @@ public class ARVaseHandler : MonoBehaviour
         {
             menuPanel.SetActive(true);
             menuButton.SetActive(false);
+            backgroundOverlay.SetActive(true);
         }
     }
 
@@ -45,19 +54,17 @@ public class ARVaseHandler : MonoBehaviour
         {
             menuButton.SetActive(true);
             menuPanel.SetActive(false);
+            backgroundOverlay.SetActive(false);
         }
     }
 
     public void ShowDebriefPopup()
     {
-        if (debriefPopup != null && backgroundOverlay != null)
-        {
-            if (menuPanel != null) menuPanel.SetActive(false);
-            if (menuButton != null) menuButton.SetActive(false);
-            
-            debriefPopup.SetActive(true);
-            backgroundOverlay.SetActive(true);
-        }
+        if (debriefPopup != null) debriefPopup.SetActive(true);
+        backgroundOverlay.SetActive(true);
+        menuButton.GetComponent<Button>().interactable = false;
+        endButton.SetActive(false);
+        menuPanel.SetActive(false);
     }
     
     public void ReturnToLoader()

@@ -18,6 +18,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
+using GLTFast;
 using TMPro;
 
 namespace AvatarSDK.MetaPerson.MobileIntegrationSample
@@ -39,11 +40,11 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
         [Header("MetaPerson Defaults")]
         public AccountCredentials credentials;
         public MetaPersonLoader metaPersonLoader;
-        public GameObject uniWebViewGameObject;
+        public GameObject uniWebViewObject;
         public GameObject importControls;
         public Text progressText;
 
-        [Header("Create AvatarPopup")]
+        [Header("Create Avatar Popup")]
         public GameObject createPopup;
         public Button getAvatarButton;
         public Button proceedButton;
@@ -56,28 +57,39 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
         
         private void Start()
         {
+            CleanupRogues();
+
             if (credentials.IsEmpty())
             {
-                progressText.text = "Error: Account credentials not provided";
+                progressText.text = "Error: Contact admin for account credentials";
                 getAvatarButton.interactable = false;
             }
 
-            if (createPopup != null)
-            {
-                createPopup.SetActive(false);
-            }
-            if (overlayBackground != null)
-            {
-                overlayBackground.SetActive(false);
-            }
+            if (createPopup != null) createPopup.SetActive(false);
+            if (startPopup != null) startPopup.SetActive(false);
+            if (overlayBackground != null) overlayBackground.SetActive(false);
         }
 
-        public void OnCreateAvatarClick()
+        private void CleanupRogues()
+    {
+        var avatars = FindObjectsOfType<TimeBudgetPerFrameDeferAgent>(true);
+
+        if (avatars.Length > 0)
+        {
+            Debug.LogWarning($"[SceneHandler] found {avatars.Length} rogue glTF model(s), destroying");
+            foreach (var avatarComponent in avatars)
+            {
+                Destroy(avatarComponent.gameObject);
+            }
+        }
+    }
+
+        public void OnCreateAvatar()
         {
             if (createPopup != null && overlayBackground != null)
             {
-                overlayBackground.SetActive(true);
                 createPopup.SetActive(true);
+                overlayBackground.SetActive(true);
             }
         }
 
@@ -85,14 +97,14 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
         {
             if (createPopup != null && overlayBackground != null)
             {
-                overlayBackground.SetActive(false);
                 createPopup.SetActive(false);
+                overlayBackground.SetActive(false);
             }
 
-            UniWebView uniWebView = uniWebViewGameObject.GetComponent<UniWebView>();
+            UniWebView uniWebView = uniWebViewObject.GetComponent<UniWebView>();
             if (uniWebView == null)
             {
-                uniWebView = uniWebViewGameObject.AddComponent<UniWebView>();
+                uniWebView = uniWebViewObject.AddComponent<UniWebView>();
                 uniWebView.EmbeddedToolbar.Hide();
                 uniWebView.Frame = new Rect(0, 0, Screen.width, Screen.height);
             }
@@ -103,30 +115,22 @@ namespace AvatarSDK.MetaPerson.MobileIntegrationSample
             uniWebView.Show();
         }
 
-        public void OnStartClick()
+        public void OnStart()
         {
             shareCodeInput.text = "";
-            
+
             if (startPopup != null && overlayBackground != null)
             {
-                overlayBackground.SetActive(true);
                 startPopup.SetActive(true);
+                overlayBackground.SetActive(true);
             }
         }
 
         public void OnClose()
         {
-            if (createPopup != null && overlayBackground != null)
-            {
-                overlayBackground.SetActive(false);
-                createPopup.SetActive(false);
-            }
-
-            if (startPopup != null && overlayBackground != null)
-            {
-                overlayBackground.SetActive(false);
-                startPopup.SetActive(false);
-            }
+            overlayBackground.SetActive(false);
+            createPopup.SetActive(false);
+            startPopup.SetActive(false);
         }
 
         public async void LoadAvatarWithShareCode()

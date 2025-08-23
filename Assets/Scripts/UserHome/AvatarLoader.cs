@@ -1,12 +1,11 @@
-using UnityEngine;
-using TMPro;
-using AvatarSDK.MetaPerson.Loader;
-using System.Threading.Tasks;
-using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System;
+using System.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-
+using TMPro;
+using AvatarSDK.MetaPerson.Loader;
 
 public class AvatarLoader : MonoBehaviour
 {
@@ -60,10 +59,7 @@ public class AvatarLoader : MonoBehaviour
             nameText.text = $"{avatar_name}";
         }
 
-        if (progressBar != null)
-        {
-            progressBar.UpdateProgress(days_completed);
-        }
+        if (progressBar != null) progressBar.UpdateProgress(days_completed);
 
         // --- WELLNESS CHECK ---
         string today_date = DateTime.UtcNow.Date.ToString();
@@ -131,10 +127,7 @@ public class AvatarLoader : MonoBehaviour
 
     void LateUpdate()
     {
-        if (initialised)
-        {
-            UpdateAvatarPosition();
-        }
+        if (initialised) UpdateAvatarPosition();
     }
 
     private void UpdateAvatarPosition()

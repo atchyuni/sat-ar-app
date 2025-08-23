@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using TMPro;
 
-// guide through moving between dark & bright environments
+// --- GUIDE ENVIRONMENT CHANGE ---
 public class LightDetector : MonoBehaviour
 {
     private enum ExercisePhase
@@ -58,7 +58,6 @@ public class LightDetector : MonoBehaviour
         {
             timeInDarkness += Time.deltaTime;
             
-            // hide panel while waiting
             if (messagePanel != null && messagePanel.activeSelf)
             {
                 messagePanel.SetActive(false);
@@ -105,7 +104,7 @@ public class LightDetector : MonoBehaviour
             case ExercisePhase.SearchingForBrightness:
                 if (CurrentBrightness > brightThreshold)
                 {
-                    // found bright area, exercise is complete
+                    // found bright area, exercise complete
                     currentPhase = ExercisePhase.Completed;
                     if (messagePanel != null) messagePanel.SetActive(false);
                 }

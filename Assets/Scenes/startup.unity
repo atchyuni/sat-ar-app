@@ -233,7 +233,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -20, y: -20}
-  m_SizeDelta: {x: 70, y: 70}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &91304128
 MonoBehaviour:
@@ -366,7 +366,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 40}
+  m_AnchoredPosition: {x: 0, y: 50}
   m_SizeDelta: {x: 360, y: 90}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &99093482
@@ -672,7 +672,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 900, y: 600}
+  m_SizeDelta: {x: 900, y: 700}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &241098916
 MonoBehaviour:
@@ -864,7 +864,7 @@ MonoBehaviour:
       - m_Target: {fileID: 1024924804}
         m_TargetAssemblyTypeName: AvatarSDK.MetaPerson.MobileIntegrationSample.MobileUnitySampleHandler,
           Assembly-CSharp
-        m_MethodName: OnCreateAvatarClick
+        m_MethodName: OnCreateAvatar
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1146,7 +1146,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -20, y: -20}
-  m_SizeDelta: {x: 70, y: 70}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &375893985
 MonoBehaviour:
@@ -1279,7 +1279,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -80}
+  m_AnchoredPosition: {x: 0, y: -100}
   m_SizeDelta: {x: 800, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &437876974
@@ -2458,7 +2458,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   credentials: {fileID: 1024924805}
   metaPersonLoader: {fileID: 963624783}
-  uniWebViewGameObject: {fileID: 1711673733}
+  uniWebViewObject: {fileID: 1711673733}
   importControls: {fileID: 1351132967}
   progressText: {fileID: 1534707863}
   createPopup: {fileID: 1914232650}
@@ -3000,7 +3000,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 10, y: -10}
+  m_AnchoredPosition: {x: 20, y: -20}
   m_SizeDelta: {x: 2000, y: 50}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1274665903
@@ -3309,7 +3309,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 50ab53d34a51049a997ae1994cf7f400, type: 3}
-    m_FontSize: 24
+    m_FontSize: 40
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -3338,7 +3338,7 @@ RectTransform:
   m_GameObject: {fileID: 1534707862}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.6314447, y: 1.6314447, z: 1.6314447}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1351132968}
@@ -3461,7 +3461,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 20}
+  m_AnchoredPosition: {x: 0, y: -10}
   m_SizeDelta: {x: 900, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1710918288
@@ -3484,14 +3484,13 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '1. <b>Choose Your Base Avatar:</b> Use the MetaPerson default models or
-    generate your own from a photo. For the best results, dress your avatar in a
-    simple t-shirt and trousers.
+  m_text: '1. <b>Choose Your Base Avatar:</b> Customise the MetaPerson default models
+    or generate your own from a photo (uploaded or selfie).
 
 
-    2. <b>Export Your Avatar:</b> Once you''re
-    ready, press the "Export" button on the top right-hand corner, and select the
-    GLB option. We''ll work our magic to finalise your avatar.'
+    2. <b>Export Your
+    Avatar:</b> Click "Export" on the top right-hand corner, and select <b><u>GLB</u></b>.
+    We''ll work our magic to finalise your childhood avatar.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3624,6 +3623,10 @@ PrefabInstance:
       propertyPath: showOnStart
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114939446366399424, guid: 7e3f16a6f6303419cbd9837f6c746de4, type: 3}
+      propertyPath: useEmbeddedToolbar
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3720,7 +3723,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -50}
+  m_AnchoredPosition: {x: 0, y: -80}
   m_SizeDelta: {x: 700, y: 50}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1784363642
@@ -3743,7 +3746,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Load Your Avatar
+  m_text: 'Load Your
+
+    Avatar'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2308d279ce49f4112bbb1191bd9b21e3, type: 2}
   m_sharedMaterial: {fileID: 932301631808509515, guid: 2308d279ce49f4112bbb1191bd9b21e3, type: 2}
@@ -3935,7 +3940,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 40}
+  m_AnchoredPosition: {x: 0, y: 50}
   m_SizeDelta: {x: 360, y: 90}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1943738052
@@ -4090,7 +4095,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Create Your Avatar
+  m_text: 'Create Your
+
+    Childhood Avatar'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2308d279ce49f4112bbb1191bd9b21e3, type: 2}
   m_sharedMaterial: {fileID: 932301631808509515, guid: 2308d279ce49f4112bbb1191bd9b21e3, type: 2}
@@ -4125,7 +4132,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 1
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 512
+  m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -4201,7 +4208,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 80}
+  m_AnchoredPosition: {x: 0, y: 70}
   m_SizeDelta: {x: 800, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1994016320
@@ -4224,8 +4231,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Provide the unique share code associated with your avatar below. If you
-    haven't already created one, please exit and select the "Create Avatar" option.
+  m_text: Provide the <b>unique share code</b> associated with your avatar below.
+    If you haven't already created one, please exit and select the "Create Avatar"
+    option.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4389,7 +4397,7 @@ MonoBehaviour:
       - m_Target: {fileID: 1024924804}
         m_TargetAssemblyTypeName: AvatarSDK.MetaPerson.MobileIntegrationSample.MobileUnitySampleHandler,
           Assembly-CSharp
-        m_MethodName: OnStartClick
+        m_MethodName: OnStart
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections.Generic;
 using AvatarSDK.MetaPerson.Loader;
 
 public class AvatarCleanup : MonoBehaviour

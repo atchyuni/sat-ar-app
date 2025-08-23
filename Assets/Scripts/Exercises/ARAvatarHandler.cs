@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
-using AvatarSDK.MetaPerson.Loader;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using AvatarSDK.MetaPerson.Loader;
 
 [RequireComponent(typeof(ARRaycastManager))]
 public class ARAvatarHandler : MonoBehaviour
@@ -17,12 +17,14 @@ public class ARAvatarHandler : MonoBehaviour
 
     [Header("UI References")]
     [SerializeField] private GameObject loadingPanel;
+    [SerializeField] private GameObject messagePanel;
     [SerializeField] private GameObject instructionBox;
     [SerializeField] private GameObject menuButton;
     [SerializeField] private GameObject menuPanel;
     [SerializeField] private GameObject lockButton;
     [SerializeField] private GameObject debriefPopup;
     [SerializeField] private GameObject backgroundOverlay;
+    [SerializeField] private GameObject endButton;
     [SerializeField] private Toggle happyFace;
     [SerializeField] private Toggle sadFace;
     [SerializeField] private Toggle happyBody;
@@ -51,11 +53,18 @@ public class ARAvatarHandler : MonoBehaviour
     {
         arRaycastManager = GetComponent<ARRaycastManager>();
         if (instructionBox != null) instructionBox.SetActive(true);
+        if (backgroundOverlay != null) backgroundOverlay.SetActive(true);
         if (placementIndicator != null) placementIndicator.SetActive(false);
         if (loadingPanel != null) loadingPanel.SetActive(false);
-        if (menuButton != null) menuButton.SetActive(false);
+        if (emotionButton != null) emotionButton.SetActive(true);
+        emotionButton.GetComponent<Button>().interactable = false;
+        if (menuButton != null) menuButton.SetActive(true);
+        menuButton.GetComponent<Button>().interactable = false;
         if (menuPanel != null) menuPanel.SetActive(false);
-        if (lockButton != null) lockButton.SetActive(false);
+        if (lockButton != null) lockButton.SetActive(true);
+        lockButton.GetComponent<Button>().interactable = false;
+        if (endButton != null) endButton.SetActive(true);
+        endButton.GetComponent<Button>().interactable = false;
     }
 
     void Update()
@@ -65,7 +74,6 @@ public class ARAvatarHandler : MonoBehaviour
             UpdatePlacementIndicator();
         }
 
-        // only allow repositioning if avatar not locked
         if (!locked && Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
         {
             // --- UI TAP CHECK ---
@@ -124,8 +132,11 @@ public class ARAvatarHandler : MonoBehaviour
         if (instructionBox != null)
         {
             instructionBox.SetActive(false);
-            menuButton.SetActive(true);
-            lockButton.SetActive(true);
+            backgroundOverlay.SetActive(false);
+            emotionButton.GetComponent<Button>().interactable = true;
+            menuButton.GetComponent<Button>().interactable = true;
+            lockButton.GetComponent<Button>().interactable = true;
+            endButton.GetComponent<Button>().interactable = true;
         }
     }
 
@@ -135,6 +146,7 @@ public class ARAvatarHandler : MonoBehaviour
         {
             menuPanel.SetActive(true);
             menuButton.SetActive(false);
+            backgroundOverlay.SetActive(true);
         }
     }
 
@@ -144,6 +156,7 @@ public class ARAvatarHandler : MonoBehaviour
         {
             menuButton.SetActive(true);
             menuPanel.SetActive(false);
+            backgroundOverlay.SetActive(false);
         }
     }
 
@@ -243,17 +256,14 @@ public class ARAvatarHandler : MonoBehaviour
 
     public void ShowDebriefPopup()
     {
-        if (debriefPopup != null && backgroundOverlay != null)
-        {
-            if (emotionControls != null) emotionControls.SetActive(false);
-            if (emotionButton != null) emotionButton.SetActive(false);
-            if (menuPanel != null) menuPanel.SetActive(false);
-            if (menuButton != null) menuButton.SetActive(false);
-            if (lockButton != null) lockButton.SetActive(false);
-
-            debriefPopup.SetActive(true);
-            backgroundOverlay.SetActive(true);
-        }
+        if (debriefPopup != null) debriefPopup.SetActive(true);
+        backgroundOverlay.SetActive(true);
+        menuButton.GetComponent<Button>().interactable = false;
+        lockButton.GetComponent<Button>().interactable = false;
+        endButton.SetActive(false);
+        emotionControls.SetActive(false);
+        messagePanel.SetActive(false);
+        menuPanel.SetActive(false);
     }
     
     public void ReturnToLoader()

@@ -1,8 +1,8 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using UnityEngine.SceneManagement;
-using System;
+using TMPro;
 
 public class ChecklistManager : MonoBehaviour
 {
